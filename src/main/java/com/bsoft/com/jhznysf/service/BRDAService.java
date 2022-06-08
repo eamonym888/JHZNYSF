@@ -2,7 +2,6 @@ package com.bsoft.com.jhznysf.service;
 
 import com.bsoft.com.jhznysf.base.service.IBaseService;
 import com.bsoft.com.jhznysf.utils.PageData;
-import org.dom4j.Element;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

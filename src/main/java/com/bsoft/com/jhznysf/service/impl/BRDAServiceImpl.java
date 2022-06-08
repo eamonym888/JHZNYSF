@@ -1,6 +1,6 @@
 package com.bsoft.com.jhznysf.service.impl;
 
-import com.bsoft.com.jhznysf.mapperJYZYY.BRDAMapper;
+import com.bsoft.com.jhznysf.mappers.mapperjyzyyhis.BRDAMapper;
 import com.bsoft.com.jhznysf.service.BRDAService;
 import com.bsoft.com.jhznysf.utils.PageData;
 import net.minidev.json.JSONObject;

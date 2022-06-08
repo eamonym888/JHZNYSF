@@ -1,4 +1,4 @@
-package com.bsoft.com.jhznysf.mapperJYZYY;
+package com.bsoft.com.jhznysf.mappers.mapperjyzyyhis;
 
 
 import com.bsoft.com.jhznysf.base.mapper.SqlMapper;
@@ -13,10 +13,10 @@ import java.util.List;
 public interface BRDAMapper extends SqlMapper {
 
     @Select(" <script> SELECT GX.MRZ AS ORGAN_CODE,MB.BRID,MB.MZHM,DECODE(MB.BRXZ,1000,'0','1') AS VISIT_CARD_TYPE,MB.BRXM,MB.SFZH,DECODE(MB.ZXBZ,0,'1','0') AS ZXBZ,to_char(MB.JDSJ,'YYYY-MM-DD hh:mm:ss') AS JDSJ \n" +
-            "FROM MS_BRDA MB\n" +
-            "LEFT JOIN MS_GHMX MG ON MG.BRID=MB.BRID\n" +
-            "LLEFT JOIN GY_XTCS GX ON GX.CSMC='YLJGDM'\n" +
-            "WHERE MB.BRXZ IN (1000,5000)\n"+
+            "FROM MS_BRDA MB \n" +
+            "LEFT JOIN MS_GHMX MG ON MG.BRID=MB.BRID \n" +
+            "LEFT JOIN GY_XTCS GX ON GX.CSMC='YLJGDM' \n" +
+            "WHERE MB.BRXZ IN (1000,5000) \n"+
             "<if  test= \"visitCardNo!=null and visitCardNo!=''\"> and MB.MZHM = #{visitCardNo} </if>" +
             "<if  test= \"patName!=null and patName!=''\"> and MB.BRXM = #{patName} </if>" +
             "<if  test= \"idNumber!=null and idNumber!=''\"> and MB.SFZH = #{idNumber} </if>" +

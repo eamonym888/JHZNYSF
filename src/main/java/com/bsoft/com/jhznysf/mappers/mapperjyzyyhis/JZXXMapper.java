@@ -1,4 +1,4 @@
-package com.bsoft.com.jhznysf.mapperJYZYY;
+package com.bsoft.com.jhznysf.mappers.mapperjyzyyhis;
 
 
 import com.bsoft.com.jhznysf.base.mapper.SqlMapper;
@@ -44,10 +44,10 @@ public interface JZXXMapper extends SqlMapper {
             "<if  test= \"startDate!=null and startDate!=''\"> and YMJ.KSSJ &gt;= to_date(#{startDate},'yyyy-MM-dd HH24:mi:ss') </if>" +//开始日期时间
             "<if  test= \"endDate!=null and endDate!=''\"> and YMJ.KSSJ &lt;= to_date(#{endDate},'yyyy-MM-dd HH24:mi:ss') </if>\n" +//结束日期时间
 
-            "<if  test= \"flag='1'\"> order by YMJ.KSSJ </if> \n" +
+            "<if  test= \"flag=='1'\"> order by YMJ.KSSJ </if> \n" +
             ")A\n" +
             "WHERE 1=1 " +
-            "<if  test= \"flag='1'\"> and rownum &gt; (#{num}-1)*#{size} and rownum &lt;= #{num}*#{size} </if> </script>")//取分页数据
+            "<if  test= \"flag=='1'\"> and rownum &gt; (#{num}-1)*#{size} and rownum &lt;= #{num}*#{size} </if> </script>")//取分页数据
     List<PageData> getVisitInfo(PageData pd) ;
 
 }

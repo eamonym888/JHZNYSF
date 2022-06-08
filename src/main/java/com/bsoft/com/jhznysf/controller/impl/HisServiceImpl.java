@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.jws.WebService;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,7 @@ import java.util.List;
         portName = "hisPortName",             //port名称
         endpointInterface = "com.bsoft.com.jhznysf.controller.HisService")//指定发布webservcie的接口类，此类也需要接入@WebService注解
 public class HisServiceImpl implements HisService {
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:dd");
+    //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:dd");
     /**
      * 云随访入口
      * */
@@ -65,6 +64,10 @@ public class HisServiceImpl implements HisService {
             }
             if(code.equals("1009")){//3.2.10	处方明细信息
                 return this.getOrderDetailInfo(XML);
+            }
+
+            if(code.equals("1011")){//3.2.12	检验报告
+                return this.getTestReport(XML);
             }
 
             if(code.equals("1015")){//3.2.16	住院记录
@@ -119,31 +122,31 @@ public class HisServiceImpl implements HisService {
                     str.append("</DEPT_INDEX_NO>");
                     str.append("<DEPT_CODE>");
                     str.append(pgd.getString("KSDM"));//科室代码
-                    str.append("<DEPT_CODE>");
+                    str.append("</DEPT_CODE>");
                     str.append("<DEPT_NAME>");
                     str.append(pgd.getString("KSMC"));//科室名称
-                    str.append("<DEPT_NAME>");
+                    str.append("</DEPT_NAME>");
                     str.append("<DEPT_ALIAS>");
                     str.append(pgd.getString("KSMC"));//科室别名
-                    str.append("<DEPT_ALIAS>");
+                    str.append("</DEPT_ALIAS>");
                     str.append("<PINYIN_CODE>");
                     str.append(pgd.getString("PYDM"));//拼音码
-                    str.append("<PINYIN_CODE>");
+                    str.append("</PINYIN_CODE>");
                     str.append("<OI_DEPT_FLAG>");
                     str.append(pgd.getString("OI_DEPT_FLAG"));//门诊住院科室标志
-                    str.append("<OI_DEPT_FLAG>");
+                    str.append("</OI_DEPT_FLAG>");
                     str.append("<SUPERIOR_DEPT_CODE>");
                     str.append(pgd.getString("SJKS"));//上级科室代码
-                    str.append("<SUPERIOR_DEPT_CODE>");
+                    str.append("</SUPERIOR_DEPT_CODE>");
                     str.append("<SUPERIOR_DEPT_NAME>");
                     str.append(pgd.getString("SJKSMC"));//上级科室名称
-                    str.append("<SUPERIOR_DEPT_NAME>");
+                    str.append("</SUPERIOR_DEPT_NAME>");
                     str.append("<DESCR>");
                     str.append(pgd.getString("KSMS"));//描述
-                    str.append("<DESCR>");
+                    str.append("</DESCR>");
                     str.append("<INVALID_FLAG>");
                     str.append(pgd.getString("ZFBZ"));//作废标志
-                    str.append("<INVALID_FLAG>");
+                    str.append("</INVALID_FLAG>");
                     str.append("</row></msg>");
                 }
             }
@@ -187,52 +190,52 @@ public class HisServiceImpl implements HisService {
                     str.append("</STAFF_INDEX_NO>");
                     str.append("<STAFF_CODE>");
                     str.append(pgd.getString("YGBH"));//职工工号
-                    str.append("<STAFF_CODE>");
+                    str.append("</STAFF_CODE>");
                     str.append("<STAFF_NAME>");
                     str.append(pgd.getString("YGXM"));//职工姓名
-                    str.append("<STAFF_NAME>");
+                    str.append("</STAFF_NAME>");
                     str.append("<PINYIN_CODE>");
                     str.append(pgd.getString("PYDM"));//拼音码
-                    str.append("<PINYIN_CODE>");
+                    str.append("</PINYIN_CODE>");
                     str.append("<ID_NUMBER>");
                     str.append(pgd.getString("SFZ"));//身份证号码
-                    str.append("<ID_NUMBER>");
+                    str.append("</ID_NUMBER>");
                     str.append("<SEX_CODE>");
                     str.append(pgd.getString("YGXB"));//性别代码
-                    str.append("<SEX_CODE>");
+                    str.append("</SEX_CODE>");
                     str.append("<SEX_NAME>");
                     str.append(pgd.getString("SEX_NAME"));//性别名称
-                    str.append("<SEX_NAME>");
+                    str.append("</SEX_NAME>");
                     str.append("<TITLE_NAME>");
                     str.append(pgd.getString("TITLE_CODE"));//职称代码
-                    str.append("<TITLE_NAME>");
+                    str.append("</TITLE_NAME>");
                     str.append("<DESCR>");
                     str.append(pgd.getString("TITLE_NAME"));//职称名称
-                    str.append("<DESCR>");
+                    str.append("</DESCR>");
                     str.append("<MOBILE_NO>");
                     str.append(pgd.getString("SJHM"));//手机号码
-                    str.append("<MOBILE_NO>");
+                    str.append("</MOBILE_NO>");
                     str.append("<EMAIL>");
                     str.append(pgd.getString("EMAIL"));//邮箱
-                    str.append("<EMAIL>");
+                    str.append("</EMAIL>");
                     str.append("<BIRTH_DATE>");
                     str.append(pgd.getString("CSNY"));//出生日期
-                    str.append("<BIRTH_DATE>");
+                    str.append("</BIRTH_DATE>");
                     str.append("<STAFF_BRIEFING>");
                     str.append(pgd.getString("STAFF_BRIEFING"));//职工简介
-                    str.append("<STAFF_BRIEFING>");
+                    str.append("</STAFF_BRIEFING>");
                     str.append("<GOOD_DESCR>");
                     str.append(pgd.getString("GOOD_DESCR"));//擅长说明
-                    str.append("<GOOD_DESCR>");
+                    str.append("</GOOD_DESCR>");
                     str.append("<SUBOR_DEPT_CODE>");
                     str.append(pgd.getString("SUBOR_DEPT_CODE"));//从属科室代码
-                    str.append("<SUBOR_DEPT_CODE>");
+                    str.append("</SUBOR_DEPT_CODE>");
                     str.append("<SUBOR_DEPT_NAME>");
                     str.append(pgd.getString("SUBOR_DEPT_NAME"));//从属科室名称
-                    str.append("<SUBOR_DEPT_NAME>");
+                    str.append("</SUBOR_DEPT_NAME>");
                     str.append("<INVALID_FLAG>");
                     str.append(pgd.getString("ZFPB"));//作废标志
-                    str.append("<INVALID_FLAG>");
+                    str.append("</INVALID_FLAG>");
 
                     str.append("</row></msg>");
                 }
@@ -277,13 +280,13 @@ public class HisServiceImpl implements HisService {
                     str.append("</DIAG_INDEX_NO>");
                     str.append("<DIAG_CODE>");
                     str.append(pgd.getString("DIAG_CODE"));//疾病代码
-                    str.append("<DIAG_CODE>");
+                    str.append("</DIAG_CODE>");
                     str.append("<DIAG_NAME>");
                     str.append(pgd.getString("JBMC"));//疾病名称
-                    str.append("<DIAG_NAME>");
+                    str.append("</DIAG_NAME>");
                     str.append("<PINYIN_CODE>");
                     str.append(pgd.getString("PYDM"));//拼音码
-                    str.append("<PINYIN_CODE>");
+                    str.append("</PINYIN_CODE>");
                     str.append("</row></msg>");
                 }
             }
@@ -327,13 +330,13 @@ public class HisServiceImpl implements HisService {
                     str.append("</DRUG_INDEX_NO>");
                     str.append("<DRUG_CODE>");
                     str.append(pgd.getString("YPDM"));//药品代码
-                    str.append("<DRUG_CODE>");
+                    str.append("</DRUG_CODE>");
                     str.append("<DRUG_NAME>");
                     str.append(pgd.getString("YPMC"));//药品名称
-                    str.append("<DRUG_NAME>");
+                    str.append("</DRUG_NAME>");
                     str.append("<PINYIN_CODE>");
                     str.append(pgd.getString("PYDM"));//拼音码
-                    str.append("<PINYIN_CODE>");
+                    str.append("</PINYIN_CODE>");
                     str.append("</row></msg>");
                 }
             }
@@ -854,6 +857,127 @@ public class HisServiceImpl implements HisService {
     }
 
     /**
+     * 根据门诊流水号、住院流水号等获取患者检验报告（参数可选）
+     * */
+    @Qualifier("JYBGServiceImpl")
+    @Autowired
+    private JYBGService jybgservice;
+    public String getTestReport(String XML) {
+        String fhjg;
+        try {
+            Document document = DocumentHelper.parseText(XML);
+            Element root = document.getRootElement();
+            Element met = root.element("param");//解析XML
+            String patIndexNo = met.element("PAT_INDEX_NO").getText();//解析XML患者索引号
+            String outhospNo = met.element("OUTHOSP_NO").getText();//解析XML门诊号
+            String inhospNo = met.element("INHOSP_NO").getText();//解析XML住院号
+            String barcodeNo = met.element("BARCODE_NO").getText();//解析XML条码号(多个条码号用逗号分隔)
+            String reportNo = met.element("REPORT_NO").getText();//解析XML报告单号
+            String startDate = met.element("START_DATE").getText();//解析XML开始日期时间
+            String endDate = met.element("END_DATE").getText();//解析XML结束日期时间
+            List<PageData> stringList;
+            StringBuilder str = new StringBuilder();
+            PageData pd = new PageData();
+            pd.put("patIndexNo",patIndexNo);
+            pd.put("outhospNo",outhospNo);
+            pd.put("inhospNo",inhospNo);
+            pd.put("barcodeNo",barcodeNo);
+            pd.put("reportNo",reportNo);
+            pd.put("startDate",startDate);
+            pd.put("endDate",endDate);
+
+            stringList = jybgservice.getTestReport(pd);
+            for (PageData pgd :stringList) {
+                str.append("<msg><row>");
+                str.append("<ORGAN_CODE>");
+                str.append(pgd.getString("ORGAN_CODE"));//组织机构代码
+                str.append("</ORGAN_CODE>");
+                str.append("<PAT_INDEX_NO\n>");
+                str.append(pgd.getString("PAT_INDEX_NO"));//患者索引号
+                str.append("</PAT_INDEX_NO\n>");
+                str.append("<OUTHOSP_NO\n>");
+                str.append(pgd.getString("OUTHOSP_NO"));//门诊号
+                str.append("</OUTHOSP_NO\n>");
+                str.append("<INHOSP_NO\n>");
+                str.append(pgd.getString("INHOSP_NO"));//住院号
+                str.append("</INHOSP_NO\n>");
+                str.append("<REQUISITION_NO\n>");
+                str.append(pgd.getString("REQUISITION_NO"));//申请单编号
+                str.append("</REQUISITION_NO\n>");
+                str.append("<REQUISITION_NO_ITEM\n>");
+                str.append(pgd.getString("REQUISITION_NO_ITEM"));//申请单分项目序号
+                str.append("</REQUISITION_NO_ITEM\n>");
+                str.append("<REPORT_NO\n>");
+                str.append(pgd.getString("REPORT_NO"));//报告单编号
+                str.append("</REPORT_NO\n>");
+                str.append("<BARCODE_NO\n>");
+                str.append(pgd.getString("BARCODE_NO"));//条码号
+                str.append("</BARCODE_NO\n>");
+                str.append("<REPORT_NAME\n>");
+                str.append(pgd.getString("REPORT_NAME"));//报告名称
+                str.append("</REPORT_NAME\n>");
+                str.append("<SAMPLE_TYPE_CODE\n>");
+                str.append(pgd.getString("SAMPLE_TYPE_CODE"));//样本类型代码
+                str.append("</SAMPLE_TYPE_CODE\n>");
+                str.append("<SAMPLE_TYPE_NAME\n>");
+                str.append(pgd.getString("SAMPLE_TYPE_NAME"));//样本类型名称
+                str.append("</SAMPLE_TYPE_NAME\n>");
+                str.append("<TEST_ITEM_CODE\n>");
+                str.append(pgd.getString("TEST_ITEM_CODE"));//检验项目代码
+                str.append("</TEST_ITEM_CODE\n>");
+                str.append("<TEST_ ITEM _NAME\n>");
+                str.append(pgd.getString("TEST_ ITEM _NAME"));//检验项目名称
+                str.append("</TEST_ ITEM _NAME\n>");
+                str.append("<MICROBE_TEST_FLAG\n>");
+                str.append(pgd.getString("MICROBE_TEST_FLAG"));//微生物检验标志
+                str.append("</MICROBE_TEST_FLAG\n>");
+                str.append("<EQUIPMENT_CODE\n>");
+                str.append(pgd.getString("EQUIPMENT_CODE"));//设备代码
+                str.append("</EQUIPMENT_CODE\n>");
+                str.append("<EQUIPMENT_NAME\n>");
+                str.append(pgd.getString("EQUIPMENT_NAME"));//设备名称
+                str.append("</EQUIPMENT_NAME\n>");
+                str.append("<APPLY_DATE\n>");
+                str.append(pgd.getString("APPLY_DATE"));//申请日期
+                str.append("</APPLY_DATE\n>");
+                str.append("<APPLY_DEPT_CODE\n>");
+                str.append(pgd.getString("APPLY_DEPT_CODE"));//申请科室代码
+                str.append("</APPLY_DEPT_CODE\n>");
+                str.append("<APPLY_DEPT_NAME\n>");
+                str.append(pgd.getString("APPLY_DEPT_NAME"));//申请科室名称
+                str.append("</APPLY_DEPT_NAME\n>");
+                str.append("<APPLY_DR_CODE\n>");
+                str.append(pgd.getString("APPLY_DR_CODE"));//申请医生工号
+                str.append("</APPLY_DR_CODE\n>");
+                str.append("<APPLY_DR_NAME\n>");
+                str.append(pgd.getString("APPLY_DR_NAME"));//申请医生姓名
+                str.append("</APPLY_DR_NAME\n>");
+                str.append("<EXECUTE_DATE\n>");
+                str.append(pgd.getString("EXECUTE_DATE\n"));//执行日期
+                str.append("</EXECUTE_DATE\n>");
+                str.append("<REPORT_DATE\n>");
+                str.append(pgd.getString("REPORT_DATE\n"));//报告日期
+                str.append("</REPORT_DATE\n>");
+                str.append("<NOTE>");
+                str.append(pgd.getString("NOTE"));//备注
+                str.append("</NOTE>");
+
+                str.append("</row></msg>");
+            }
+            if(!stringList.isEmpty()){
+                fhjg =this.getFHJG("1","",str.toString());
+            }else{
+                fhjg =this.getFHJG("0","",str.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return this.getFHJG("-1",e.getMessage(),"");
+        }
+        return fhjg;
+    }
+
+
+    /**
      * 根据就诊卡号、患者姓名、身份证号码等获取患者内住院记录（参数可选），可指定时间区间（需要支持分页）
      * */
     @Qualifier("ZYJLServiceImpl")
@@ -1029,12 +1153,12 @@ public class HisServiceImpl implements HisService {
                     str.append("<INFECT_DISEASE_HISTORY>");
                     str.append(pgd.getString("INFECT_DISEASE_HISTORY"));//传染病史
                     str.append("</INFECT_DISEASE_HISTORY>");
-                    str.append("<ADMIT_DIAG_NAME>");
+                    str.append("<ADMIT_DIAG_CODE>");
                     str.append(pgd.getString("ADMIT_DIAG_CODE"));//入院诊断代码
-                    str.append("</ADMIT_DIAG_NAME>");
-                    str.append("<ADMIT _DIAG_NAME>");
+                    str.append("</ADMIT_DIAG_CODE>");
+                    str.append("<ADMIT_DIAG_NAME>");
                     str.append(pgd.getString("_DIAG_NAME"));//入院诊断名称
-                    str.append("</ADMIT _DIAG_NAME>");
+                    str.append("</ADMIT_DIAG_NAME>");
                     str.append("<RECEPT_TREAT_DR_CODE>");
                     str.append(pgd.getString("MZYS"));//接诊医师工号
                     str.append("</RECEPT_TREAT_DR_CODE>");

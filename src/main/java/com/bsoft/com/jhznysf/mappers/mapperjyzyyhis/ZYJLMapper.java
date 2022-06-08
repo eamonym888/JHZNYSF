@@ -1,4 +1,4 @@
-package com.bsoft.com.jhznysf.mapperJYZYY;
+package com.bsoft.com.jhznysf.mappers.mapperjyzyyhis;
 
 
 import com.bsoft.com.jhznysf.base.mapper.SqlMapper;
@@ -14,7 +14,7 @@ public interface ZYJLMapper extends SqlMapper {
 
     @Select(" <script> SELECT A.*\n" +
             "FROM (\n" +
-            "SELECT GX.MRZ AS ORGAN_CODE,ZB.BRID,ZB.MZHM,ZB.BRXM,ZB.SFZH,MB.BRXB,decode(MB.BRXB,1,'男','女') AS SEX_NAME,MB.CSNY,ZB.LXDH,ZB.BAHM,YZJ.ZYCS,ZB.ZYH, \n" +
+            "SELECT GX.MRZ AS ORGAN_CODE,ZB.BRID,ZB.MZHM,ZB.BRXM,ZB.SFZH,MB.BRXB,decode(MB.BRXB,1,'男','女') AS SEX_NAME,MB.CSNY,ZB.LXDH,ZB.ZYHM,YZJ.ZYCS,ZB.ZYH, \n" +
             "ZB.BRKS,GK.KSMC AS DEPT_NAME,ZB.BRBQ,GK1.KSMC AS WARD_NAME,'' AS SICKROOM_NO,ZB.BRCH, \n" +
             "to_char(ZB.RYRQ,'YYYY-MM-DD hh:mm:ss') AS RYRQ,GD.DMMC AS ADMIT_SITUATION, \n" +
             "BEBB.XMQZ AS ADMIT_WAY_CODE,GD1.DMMC AS ADMIT_WAY_NAME, \n" +
@@ -76,10 +76,10 @@ public interface ZYJLMapper extends SqlMapper {
             "<if  test= \"startDate!=null and startDate!=''\"> and ZB.CYRQ &gt;= to_date(#{startDate},'yyyy-MM-dd HH24:mi:ss') </if>"+//开始日期时间
             "<if  test= \"endDate!=null and endDate!=''\"> and ZB.CYRQ &lt;= to_date(#{endDate},'yyyy-MM-dd HH24:mi:ss') </if>" +//结束日期时间
 
-            "<if  test= \"flag='1'\"> order by ZB.CYRQ desc </if> \n" +
+            "<if  test= \"flag=='1'\"> order by ZB.CYRQ desc </if> \n" +
             ")A \n" +
             "WHERE 1=1 " +
-            "<if  test= \"flag='1'\"> and rownum &gt; (#{num}-1)*#{size} and rownum &lt;= #{num}*#{size} </if> </script>")//取分页数据
+            "<if  test= \"flag=='1'\"> and rownum &gt; (#{num}-1)*#{size} and rownum &lt;= #{num}*#{size} </if> </script>")//取分页数据
     List<PageData> getInhospRecord(PageData pd) ;
 
     @Select("<script> SELECT count(1)\n" +

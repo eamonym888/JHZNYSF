@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class JhznysfApplicationTests {
 
     @Test
-    void contextLoads() {
+    public void contextLoads() {
     }
 
 }

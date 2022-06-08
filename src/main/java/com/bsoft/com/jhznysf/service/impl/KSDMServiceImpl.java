@@ -1,6 +1,6 @@
 package com.bsoft.com.jhznysf.service.impl;
 
-import com.bsoft.com.jhznysf.mapperJYZYY.KSDMMapper;
+import com.bsoft.com.jhznysf.mappers.mapperjyzyyhis.KSDMMapper;
 import com.bsoft.com.jhznysf.service.KSDMService;
 import com.bsoft.com.jhznysf.utils.PageData;
 import net.minidev.json.JSONObject;
