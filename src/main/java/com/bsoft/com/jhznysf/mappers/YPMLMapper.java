@@ -1,4 +1,4 @@
-package com.bsoft.com.jhznysf.mappers.mapperjyzyyhis;
+package com.bsoft.com.jhznysf.mappers;
 
 
 import com.bsoft.com.jhznysf.base.mapper.SqlMapper;

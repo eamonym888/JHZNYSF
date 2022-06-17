@@ -1,4 +1,4 @@
-package com.bsoft.com.jhznysf.mappers.mapperjyzyyhis;
+package com.bsoft.com.jhznysf.mappers;
 
 
 import com.bsoft.com.jhznysf.base.mapper.SqlMapper;
@@ -10,12 +10,12 @@ import java.util.List;
 @Mapper
 public interface KSDMMapper extends SqlMapper {
 
-    @Select(" SELECT GX.MRZ AS ORGAN_CODE,GK.PLSX,GK.KSDM,GK.KSMC,GK.KSMC,GK.PYDM,decode(GK.MZSY,'Y',1,2) AS OI_DEPT_FLAG,\n" +
+    @Select(" SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM') AS ORGAN_CODE,GK.PLSX,GK.KSDM,GK.KSMC,GK.KSMC,GK.PYDM,decode(GK.MZSY,'Y',1,2) AS OI_DEPT_FLAG,\n" +
             "GK.SJKS,GK1.KSMC AS SJKSMC,GK.KSDZ AS KSMS,1 AS ZFBZ  \n" +
             "FROM GY_KSDM GK\n" +
             "left join GY_KSDM GK1 on GK.SJKS = GK1.KSDM \n" +
-            "LEFT JOIN GY_XTCS GX ON GX.CSMC='YLJGDM' \n" +
-            "WHERE GX.CSMC='YLJGDM' AND GK.MZSY='Y' OR GK.ZYSY='Y' ")
+            //"LEFT JOIN GY_XTCS GX ON GX.CSMC='YLJGDM' \n" +
+            "WHERE GK.MZSY='Y' OR GK.ZYSY='Y' ")
     List<PageData> getDeptDict(PageData pd) ;
 
 }

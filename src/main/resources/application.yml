@@ -1,0 +1,23 @@
+server:
+  port: 8085
+
+spring:
+  datasource:
+    dynamic:
+      primary: jyzyyhis
+      strict: false
+      datasource:
+        jyzyyhis:
+          url: jdbc:oracle:thin:@//172.27.0.114:1521/bshis56
+          username: bsrun56
+          password: jybsrun56
+          driver-class-name: oracle.jdbc.OracleDriver
+        jyzyylis:
+          url: jdbc:oracle:thin:@//172.27.0.30:1521/ZHLIS
+          username: zhlis
+          password: zhsoft
+          driver-class-name: oracle.jdbc.OracleDriver
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

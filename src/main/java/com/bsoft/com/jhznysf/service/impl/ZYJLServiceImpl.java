@@ -1,6 +1,6 @@
 package com.bsoft.com.jhznysf.service.impl;
 
-import com.bsoft.com.jhznysf.mappers.mapperjyzyyhis.ZYJLMapper;
+import com.bsoft.com.jhznysf.mappers.ZYJLMapper;
 import com.bsoft.com.jhznysf.service.ZYJLService;
 import com.bsoft.com.jhznysf.utils.PageData;
 import net.minidev.json.JSONObject;

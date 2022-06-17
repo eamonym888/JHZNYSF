@@ -1,4 +1,4 @@
-package com.bsoft.com.jhznysf.mappers.mapperjyzyyhis;
+package com.bsoft.com.jhznysf.mappers;
 
 
 import com.bsoft.com.jhznysf.base.mapper.SqlMapper;
@@ -11,13 +11,12 @@ import java.util.List;
 @Mapper
 public interface YGDMMapper extends SqlMapper {
 
-    @Select("SELECT GX.MRZ AS ORGAN_CODE,GY.YGDM,GY.YGBH,GY.YGXM,GY.PYDM,GY.SFZ,GY.YGXB,decode(GY.YGXB,1,'男','女') AS SEX_NAME, \n" +
+    @Select("SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM') AS ORGAN_CODE,GY.YGDM,GY.YGBH,GY.YGXM,GY.PYDM,GY.SFZ,GY.YGXB,decode(GY.YGXB,1,'男','女') AS SEX_NAME, \n" +
             "GY.YGJB AS TITLE_CODE,GD.DMMC TITLE_NAME,GY.SJHM,GY.YXDZ AS EMAIL,GY.CSNY,GY.YGJS AS STAFF_BRIEFING, \n" +
             "GY.YSJJ AS GOOD_DESCR,GY.KSDM AS SUBOR_DEPT_CODE,GK.KSMC AS SUBOR_DEPT_NAME,DECODE(GY.ZFPB,0,'1','0') AS ZFPB \n" +
             "FROM GY_YGDM GY\n" +
             "LEFT JOIN GY_DMZD GD ON DMLB=27 AND GD.DMSB=GY.YGJB\n" +
-            "LEFT JOIN GY_KSDM GK ON GK.KSDM=GY.KSDM\n" +
-            "LEFT JOIN GY_XTCS GX ON GX.CSMC='YLJGDM' ")
+            "LEFT JOIN GY_KSDM GK ON GK.KSDM=GY.KSDM")
     List<PageData> getStaffDict(PageData pd) ;
 
 }

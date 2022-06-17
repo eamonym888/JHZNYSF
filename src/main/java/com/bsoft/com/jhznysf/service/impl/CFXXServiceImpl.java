@@ -1,6 +1,6 @@
 package com.bsoft.com.jhznysf.service.impl;
 
-import com.bsoft.com.jhznysf.mappers.mapperjyzyyhis.CFXXMapper;
+import com.bsoft.com.jhznysf.mappers.CFXXMapper;
 import com.bsoft.com.jhznysf.service.CFXXService;
 import com.bsoft.com.jhznysf.utils.PageData;
 import net.minidev.json.JSONObject;
