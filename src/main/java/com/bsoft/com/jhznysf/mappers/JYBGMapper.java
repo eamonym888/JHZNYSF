@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 public interface JYBGMapper {
 
-    @Select(" <script> SELECT distinct '46640408-2' AS ORGAN_CODE,LP.BRID AS PAT_INDEX_NO, \n" +
+    @Select(" <script> SELECT distinct (SELECT GX.CSZ1 FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE,LP.BRID AS PAT_INDEX_NO, \n" +
             "DECODE(LP.STAYHOSPITALMODE,1,LP.PATIENTID,'') AS OUTHOSP_NO, \n" +
             "(SELECT listagg(ymj.jzxh, ',') within group(order by ymj.jzxh) FROM ys_mz_jzls@bshis ymj,ms_ghmx@bshis mg,ms_brda@bshis mb \n" +
             "where lp.patientid=mb.mzhm and mg.brid=mb.brid and ymj.ghxh=mg.sbxh " +

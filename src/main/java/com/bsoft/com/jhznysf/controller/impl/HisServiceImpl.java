@@ -84,12 +84,39 @@ public class HisServiceImpl implements HisService {
             if(code.equals("1016")){//3.2.17	住院费用
                 return this.getInhospFee(XML);
             }
-
+            if(code.equals("1017")){//3.2.18	住院医嘱
+                return this.getInhospOrder(XML);
+            }
+            if(code.equals("1018")){//3.2.19	手术记录
+                return this.getSurgeryRecord(XML);
+            }
             if(code.equals("1019")){//3.2.20	检查申请单
                 return this.getExamRequisition(XML);
             }
             if(code.equals("1020")){//3.2.21	检验申请单
                 return this.getTestRequisition(XML);
+            }
+
+            if(code.equals("1021")){//3.2.22	门诊费用明细
+                return this.getOuthospFeeDetail(XML);
+            }
+            if(code.equals("1022")){//3.2.23	住院费用明细
+                return this.getInhospFeeDetail(XML);
+            }
+            if(code.equals("1023")){//3.2.24	门诊费用结算
+                return this.getOuthospBalance(XML);
+            }
+            if(code.equals("1024")){//3.2.25	住院费用结算
+                return this.getInhospBalance(XML);
+            }
+            if(code.equals("1026")){//3.2.26	检验样本
+                return this.getTestSample(XML);
+            }
+            if(code.equals("1027")){//3.2.27	诊断信息-门诊
+                return this.getOuthospDiag(XML);
+            }
+            if(code.equals("1028")){//3.2.28	诊断信息-住院
+                return this.getInhospDiag(XML);
             }
 
         } catch (Exception e) {
@@ -104,7 +131,7 @@ public class HisServiceImpl implements HisService {
      * */
     private String getFHJG(String returnCode,String returnException,String returnRow){
         if(returnCode.equals("1")){
-            return "<root><retInfo><code>"+returnCode+"</code><name>成功，客户端请求成功，且有结果消息返回"+returnException+"</name></retInfo>"+ returnRow +"</root>";
+            return "<root><retInfo><code>"+returnCode+"</code><name>成功，客户端请求成功，且有结果消息返回"+returnException+"</name></retInfo>"+ returnRow.replaceAll("null","") +"</root>";
         }else if(returnCode.equals("0")){
             return "<root><retInfo><code>"+returnCode+"</code><name>成功，客户端请求成功，但是无结果消息返回"+returnException+"</name></retInfo>"+ returnRow +"</root>";
         }else{
@@ -965,9 +992,9 @@ public class HisServiceImpl implements HisService {
                 str.append("<TEST_ITEM_CODE>");
                 str.append(pgd.getString("TEST_ITEM_CODE"));//检验项目代码
                 str.append("</TEST_ITEM_CODE>");
-                str.append("<TEST_ ITEM _NAME>");
-                str.append(pgd.getString("TEST_ ITEM _NAME"));//检验项目名称
-                str.append("</TEST_ ITEM _NAME>");
+                str.append("<TEST_ITEM_NAME>");
+                str.append(pgd.getString("TEST_ITEM_NAME"));//检验项目名称
+                str.append("</TEST_ITEM_NAME>");
                 str.append("<MICROBE_TEST_FLAG>");
                 str.append(pgd.getString("MICROBE_TEST_FLAG"));//微生物检验标志
                 str.append("</MICROBE_TEST_FLAG>");
@@ -1611,6 +1638,308 @@ public class HisServiceImpl implements HisService {
     }
 
     /**
+     * 根据住院流水号获取患者某次住院的住院医嘱信息（药物医嘱）分页
+     * */
+    @Qualifier("ZYYZServiceImpl")
+    @Autowired
+    private ZYYZService zyyzservice;
+    public String getInhospOrder(String XML) {
+        String fhjg;
+        try {
+            Document document = DocumentHelper.parseText(XML);
+            Element root = document.getRootElement();
+            Element met0 = root.element("page");//解析XML中page
+            String flag = met0.element("flag").getText();//解析XML分页标志,0不分页，1分页
+            String num = "";
+            String size = "";
+            if(flag.equals("1")){
+                num = met0.element("num").getText();//解析XML当前的页数
+                size = met0.element("size").getText();//解析XML每页显示的条数
+            }
+            Element met = root.element("param");//解析XML中param
+
+
+            String inhospSerialNo = met.element("INHOSP_SERIAL_NO").getText();//解析XML住院流水号
+            String startDate = met.element("START_DATE").getText();//解析XML开始日期时间
+            String endDate = met.element("END_DATE").getText();//解析XML结束日期时间
+
+            List<PageData> stringList;
+            StringBuilder str = new StringBuilder();
+            PageData pd = new PageData();
+
+            pd.put("flag",flag);
+            pd.put("num",num);
+            pd.put("size",size);
+
+            pd.put("inhospSerialNo",inhospSerialNo);
+            pd.put("startDate",startDate);
+            pd.put("endDate",endDate);
+
+                String totalCount = zyyzservice.getInhospOrderCount(pd);//总记录数
+                stringList = zyyzservice.getInhospOrder(pd);
+                for (PageData pgd :stringList) {
+                    str.append("<msg><row>");
+                    str.append("<ORGAN_CODE>");
+                    str.append(pgd.getString("ORGAN_CODE"));//组织机构代码
+                    str.append("</ORGAN_CODE>");
+                    str.append("<PAT_INDEX_NO>");
+                    str.append(pgd.getString("PAT_INDEX_NO"));//患者索引号
+                    str.append("</PAT_INDEX_NO>");
+                    str.append("<INHOSP_NO>");
+                    str.append(pgd.getString("INHOSP_NO"));//住院号
+                    str.append("</INHOSP_NO>");
+                    str.append("<INHOSP_NUM>");
+                    str.append(pgd.getString("INHOSP_NUM"));//住院次数
+                    str.append("</INHOSP_NUM>");
+                    str.append("<INHOSP_SERIAL_NO>");
+                    str.append(pgd.getString("INHOSP_SERIAL_NO"));//住院流水号
+                    str.append("</INHOSP_SERIAL_NO>");
+                    str.append("<ORDER_NO>");
+                    str.append(pgd.getString("ORDER_NO"));//医嘱号
+                    str.append("</ORDER_NO>");
+                    str.append("<ORDER_GROUP_NO>");
+                    str.append(pgd.getString("ORDER_GROUP_NO"));//医嘱组号
+                    str.append("</ORDER_GROUP_NO>");
+                    str.append("<ORDER_PLAN_BEGIN_DATE>");
+                    str.append(pgd.getString("ORDER_PLAN_BEGIN_DATE"));//医嘱计划开始日期
+                    str.append("</ORDER_PLAN_BEGIN_DATE>");
+                    str.append("<ORDER_PLAN_END_DATE>");
+                    str.append(pgd.getString("ORDER_PLAN_END_DATE"));//医嘱计划结束日期
+                    str.append("</ORDER_PLAN_END_DATE>");
+                    str.append("<ORDER_BEGIN_DATE>");
+                    str.append(pgd.getString("ORDER_BEGIN_DATE"));//医嘱开始日期
+                    str.append("</ORDER_BEGIN_DATE>");
+                    str.append("<ORDER_END_DATE>");
+                    str.append(pgd.getString("ORDER_END_DATE"));//医嘱结束日期
+                    str.append("</ORDER_END_DATE>");
+                    str.append("<ORDER_ORDER_DATE>");
+                    str.append(pgd.getString("ORDER_ORDER_DATE"));//医嘱开立日期
+                    str.append("</ORDER_ORDER_DATE>");
+                    str.append("<ORDER_OPEN_DEPT_CODE>");
+                    str.append(pgd.getString("ORDER_OPEN_DEPT_CODE"));//医嘱开立科室代码
+                    str.append("</ORDER_OPEN_DEPT_CODE>");
+                    str.append("<ORDER_OPEN_DEPT_NAME>");
+                    str.append(pgd.getString("ORDER_OPEN_DEPT_NAME"));//医嘱开立科室名称
+                    str.append("</ORDER_OPEN_DEPT_NAME>");
+                    str.append("<ORDER_OPEN_DR_CODE>");
+                    str.append(pgd.getString("ORDER_OPEN_DR_CODE"));//医嘱开立医生工号
+                    str.append("</ORDER_OPEN_DR_CODE>");
+                    str.append("<ORDER_OPEN_DR_NAME>");
+                    str.append(pgd.getString("ORDER_OPEN_DR_NAME"));//医嘱开立医生姓名
+                    str.append("</ORDER_OPEN_DR_NAME>");
+                    str.append("<ORDER_EXECUTE_DATE>");
+                    str.append(pgd.getString("ORDER_EXECUTE_DATE"));//医嘱执行日期
+                    str.append("</ORDER_EXECUTE_DATE>");
+                    str.append("<ORDER_ITEM_TYPE_CODE>");
+                    str.append(pgd.getString("ORDER_ITEM_TYPE_CODE"));//医嘱项目类型代码
+                    str.append("</ORDER_ITEM_TYPE_CODE>");
+                    str.append("<ORDER_ITEM_TYPE_NAME>");
+                    str.append(pgd.getString("ORDER_ITEM_TYPE_NAME"));//医嘱项目类型名称
+                    str.append("</ORDER_ITEM_TYPE_NAME>");
+                    str.append("<ORDER_CATEG_CODE>");
+                    str.append(pgd.getString("ORDER_CATEG_CODE"));//医嘱类别代码
+                    str.append("</ORDER_CATEG_CODE>");
+                    str.append("<ORDER_CATEG_NAME>");
+                    str.append(pgd.getString("ORDER_CATEG_NAME"));//医嘱类别名称
+                    str.append("</ORDER_CATEG_NAME>");
+                    str.append("<ORDER_ITEM_CODE>");
+                    str.append(pgd.getString("ORDER_ITEM_CODE"));//医嘱项目代码
+                    str.append("</ORDER_ITEM_CODE>");
+                    str.append("<ORDER_ITEM_NAME>");
+                    str.append(pgd.getString("ORDER_ITEM_NAME"));//医嘱项目名称
+                    str.append("</ORDER_ITEM_NAME>");
+                    str.append("<DRUG_CODE>");
+                    str.append(pgd.getString("DRUG_CODE"));//药品代码
+                    str.append("</DRUG_CODE>");
+                    str.append("<DRUG_NAME>");
+                    str.append(pgd.getString("DRUG_NAME"));//药品名称
+                    str.append("</DRUG_NAME>");
+                    str.append("<DRUG_SPECIFICATIONS>");
+                    str.append(pgd.getString("DRUG_SPECIFICATIONS"));//药品规格
+                    str.append("</DRUG_SPECIFICATIONS>");
+                    str.append("<DOSE_WAY_CODE>");
+                    str.append(pgd.getString("DOSE_WAY_CODE"));//用药途径代码
+                    str.append("</DOSE_WAY_CODE>");
+                    str.append("<DOSE_WAY_NAME>");
+                    str.append(pgd.getString("DOSE_WAY_NAME"));//用药途径名称
+                    str.append("</DOSE_WAY_NAME>");
+                    str.append("<DRUG_USE_ONE_DOSAGE>");
+                    str.append(pgd.getString("DRUG_USE_ONE_DOSAGE"));//药品使用次剂量
+                    str.append("</DRUG_USE_ONE_DOSAGE>");
+                    str.append("<DRUG_USE_ONE_DOSAGE_UNIT>");
+                    str.append(pgd.getString("DRUG_USE_ONE_DOSAGE_UNIT"));//药品使用次剂量单位
+                    str.append("</DRUG_USE_ONE_DOSAGE_UNIT>");
+                    str.append("<DRUG_USE_FREQUENCY_CODE>");
+                    str.append(pgd.getString("DRUG_USE_FREQUENCY_CODE"));//药品使用频次代码
+                    str.append("</DRUG_USE_FREQUENCY_CODE>");
+                    str.append("<DRUG_USE_FREQUENCY_NAME>");
+                    str.append(pgd.getString("DRUG_USE_FREQUENCY_NAME"));//药品使用频次名称
+                    str.append("</DRUG_USE_FREQUENCY_NAME>");
+                    str.append("<DRUG_FORM_CODE>");
+                    str.append(pgd.getString("DRUG_FORM_CODE"));//药品剂型代码
+                    str.append("</DRUG_FORM_CODE>");
+                    str.append("<DRUG_FORM_NAME>");
+                    str.append(pgd.getString("DRUG_FORM_NAME"));//药品剂型名称
+                    str.append("</DRUG_FORM_NAME>");
+                    str.append("<DRUG_UNIT>");
+                    str.append(pgd.getString("DRUG_UNIT"));//药品单位
+                    str.append("</DRUG_UNIT>");
+                    str.append("<DRUG_UNIT_PRICE>");
+                    str.append(pgd.getString("DRUG_UNIT_PRICE"));//药品单价
+                    str.append("</DRUG_UNIT_PRICE>");
+                    str.append("<DRUG_ABBREV>");
+                    str.append(pgd.getString("DRUG_ABBREV"));//药品简称
+                    str.append("</DRUG_ABBREV>");
+                    str.append("<DRUG_DESCR>");
+                    str.append(pgd.getString("DRUG_DESCR"));//药品描述
+                    str.append("</DRUG_DESCR>");
+                    str.append("<DRUG_AMOUNT>");
+                    str.append(pgd.getString("DRUG_AMOUNT"));//药品数量
+                    str.append("</DRUG_AMOUNT>");
+                    str.append("<ORDER_DURATION>");
+                    str.append(pgd.getString("ORDER_DURATION"));//医嘱持续时间
+                    str.append("</ORDER_DURATION>");
+                    str.append("<ORDER_DURATION_UNIT>");
+                    str.append(pgd.getString("ORDER_DURATION_UNIT"));//医嘱持续时间单位
+                    str.append("</ORDER_DURATION_UNIT>");
+                    str.append("<BASE_AUX_DRUG_FLAG >");
+                    str.append(pgd.getString("BASE_AUX_DRUG_FLAG"));//主副药标志
+                    str.append("</BASE_AUX_DRUG_FLAG >");
+                    str.append("<DISCHARGE_ORDER_FLAG >");
+                    str.append(pgd.getString("DISCHARGE_ORDER_FLAG"));//出院医嘱标志
+                    str.append("</DISCHARGE_ORDER_FLAG >");
+                    str.append("<DR_ENTRUST >");
+                    str.append(pgd.getString("DR_ENTRUST"));//医生嘱托
+                    str.append("</DR_ENTRUST >");
+                    str.append("<NOTE >");
+                    str.append(pgd.getString("NOTE"));//备注
+                    str.append("</NOTE >");
+                    str.append("</row></msg>");
+                }
+                if(!stringList.isEmpty()){
+                    fhjg =this.getFHJG("1","",str.toString());
+                }else{
+                    fhjg =this.getFHJG("0","",str.toString());
+                }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return this.getFHJG("-1",e.getMessage(),"");
+        }
+        return fhjg;
+    }
+
+    /**
+     * 根据门诊流水号或住院流水号获取患者此次门诊（住院）的手术记录
+     * */
+    @Qualifier("SSJLServiceImpl")
+    @Autowired
+    private SSJLService ssjlservice;
+    public String getSurgeryRecord(String XML) {
+        String fhjg;
+        try {
+            Document document = DocumentHelper.parseText(XML);
+            Element root = document.getRootElement();
+            Element met = root.element("param");//解析XML
+            //String outhospSerialNo = met.element("OUTHOSP_SERIAL_NO").getText();//解析XML门诊流水号
+            String inhospSerialNo = met.element("INHOSP_SERIAL_NO").getText();//解析XML住院流水号
+            List<PageData> stringList;
+            StringBuilder str = new StringBuilder();
+            PageData pd = new PageData();
+            //pd.put("outhospSerialNo",outhospSerialNo);
+            pd.put("inhospSerialNo",inhospSerialNo);
+            stringList = ssjlservice.getSurgeryRecord(pd);
+            for (PageData pgd :stringList) {
+                str.append("<msg><row>");
+                str.append("<ORGAN_CODE>");
+                str.append(pgd.getString("ORGAN_CODE"));//组织机构代码
+                str.append("</ORGAN_CODE>");
+                str.append("<PAT_INDEX_NO>");
+                str.append(pgd.getString("PAT_INDEX_NO"));//患者索引号
+                str.append("</PAT_INDEX_NO>");
+                str.append("<OUTHOSP_NO>");
+                str.append(pgd.getString("OUTHOSP_NO"));//门诊号
+                str.append("</OUTHOSP_NO>");
+                str.append("<OUTHOSP_SERIAL_NO>");
+                str.append(pgd.getString("OUTHOSP_SERIAL_NO"));//门诊流水号
+                str.append("</OUTHOSP_SERIAL_NO>");
+                str.append("<INHOSP_NO>");
+                str.append(pgd.getString("INHOSP_NO"));//住院号
+                str.append("</INHOSP_NO>");
+                str.append("<INHOSP_NUM>");
+                str.append(pgd.getString("INHOSP_NUM"));//住院次数
+                str.append("</INHOSP_NUM>");
+                str.append("<INHOSP_SERIAL_NO>");
+                str.append(pgd.getString("INHOSP_SERIAL_NO"));//住院流水号
+                str.append("</INHOSP_SERIAL_NO>");
+                str.append("<SURGERY_NO>");
+                str.append(pgd.getString("SURGERY_NO"));//手术流水号
+                str.append("</SURGERY_NO>");
+                str.append("<SURGERY_SEQ_NO>");
+                str.append(pgd.getString("SURGERY_SEQ_NO"));//手术序号
+                str.append("</SURGERY_SEQ_NO>");
+                str.append("<SURGERY_OPER_CODE>");
+                str.append(pgd.getString("SURGERY_OPER_CODE"));//手术(操作)代码
+                str.append("</SURGERY_OPER_CODE>");
+                str.append("<SURGERY_OPER_NAME>");
+                str.append(pgd.getString("SURGERY_OPER_NAME"));//手术(操作)名称
+                str.append("</SURGERY_OPER_NAME>");
+                str.append("<SURGERY_LEVEL_CODE>");
+                str.append(pgd.getString("SURGERY_LEVEL_CODE"));//手术级别代码
+                str.append("</SURGERY_LEVEL_CODE>");
+                str.append("<SURGERY_LEVEL_NAME>");
+                str.append(pgd.getString("SURGERY_LEVEL_NAME"));//手术级别名称
+                str.append("</SURGERY_LEVEL_NAME>");
+                str.append("<SURGERY_WOUND_CATEG_CODE>");
+                str.append(pgd.getString("SURGERY_WOUND_CATEG_CODE"));//手术切口类别代码
+                str.append("</SURGERY_WOUND_CATEG_CODE>");
+                str.append("<SURGERY_WOUND_CATEG_NAME>");
+                str.append(pgd.getString("SURGERY_WOUND_CATEG_NAME"));//手术切口类别名称
+                str.append("</SURGERY_WOUND_CATEG_NAME>");
+                str.append("<WOUND_HEALING_LEVEL_CODE>");
+                str.append(pgd.getString("WOUND_HEALING_LEVEL_CODE"));//手术切口愈合等级代码
+                str.append("</WOUND_HEALING_LEVEL_CODE>");
+                str.append("<WOUND_HEALING_LEVEL_NAME>");
+                str.append(pgd.getString("WOUND_HEALING_LEVEL_NAME"));//手术切口愈合等级名称
+                str.append("</WOUND_HEALING_LEVEL_NAME>");
+                str.append("<SURGERY_BEGIN_DATE>");
+                str.append(pgd.getString("SURGERY_BEGIN_DATE"));//手术开始日期
+                str.append("</SURGERY_BEGIN_DATE>");
+                str.append("<SURGERY_END_DATE>");
+                str.append(pgd.getString("SURGERY_END_DATE"));//手术结束日期
+                str.append("</SURGERY_END_DATE>");
+                str.append("<SURGERY_DR_CODE>");
+                str.append(pgd.getString("SURGERY_DR_CODE"));//手术医生工号
+                str.append("</SURGERY_DR_CODE>");
+                str.append("<SURGERY_DR_NAME>");
+                str.append(pgd.getString("SURGERY_DR_NAME"));//手术医生姓名
+                str.append("</SURGERY_DR_NAME>");
+                str.append("<ANES_METHOD_CODE>");
+                str.append(pgd.getString("ANES_METHOD_CODE"));//麻醉方式代码
+                str.append("</ANES_METHOD_CODE>");
+                str.append("<ANES_METHOD_NAME>");
+                str.append(pgd.getString("ANES_METHOD_NAME"));//麻醉方式名称
+                str.append("</ANES_METHOD_NAME>");
+                str.append("<ANES_DR_CODE>");
+                str.append(pgd.getString("ANES_DR_CODE"));//麻醉医生工号
+                str.append("</ANES_DR_CODE>");
+                str.append("<ANES_DR_NAME>");
+                str.append(pgd.getString("ANES_DR_NAME"));//麻醉医生姓名
+                str.append("</ANES_DR_NAME>");
+                str.append("</row></msg>");
+            }
+            if(!stringList.isEmpty()){
+                fhjg =this.getFHJG("1","",str.toString());
+            }else{
+                fhjg =this.getFHJG("0","",str.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return this.getFHJG("-1",e.getMessage(),"");
+        }
+        return fhjg;
+    }
+
+    /**
      * 根据门诊流水号或住院流水号获取患者此次门诊（住院）的检查申请单
      * */
     @Qualifier("JCSQServiceImpl")
@@ -1780,6 +2109,498 @@ public class HisServiceImpl implements HisService {
                 str.append("<NOTE>");
                 str.append(pgd.getString("NOTE"));//备注
                 str.append("</NOTE>");
+                str.append("</row></msg>");
+            }
+            if(!stringList.isEmpty()){
+                fhjg =this.getFHJG("1","",str.toString());
+            }else{
+                fhjg =this.getFHJG("0","",str.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return this.getFHJG("-1",e.getMessage(),"");
+        }
+        return fhjg;
+    }
+
+    /**
+     * 根据交易流水号获取患者门诊费用明细信息
+     * */
+    public String getOuthospFeeDetail(String XML) {
+        String fhjg;
+        try {
+            Document document = DocumentHelper.parseText(XML);
+            Element root = document.getRootElement();
+            Element met = root.element("param");//解析XML
+            String dealNo = met.element("DEAL_NO").getText();//解析XML交易流水号
+            List<PageData> stringList;
+            StringBuilder str = new StringBuilder();
+            PageData pd = new PageData();
+            pd.put("dealNo",dealNo);
+
+            stringList = mzfyservice.getOuthospFeeDetail(pd);
+            for (PageData pgd :stringList) {
+                str.append("<msg><row>");
+                str.append("<ORGAN_CODE>");
+                str.append(pgd.getString("ORGAN_CODE"));//组织机构代码
+                str.append("</ORGAN_CODE>");
+                str.append("<DEAL_NO>");
+                str.append(pgd.getString("DEAL_NO"));//交易流水号
+                str.append("</DEAL_NO>");
+                str.append("<DEAL_SUB_NO>");
+                str.append(pgd.getString("DEAL_SUB_NO"));//交易流水子序号
+                str.append("</DEAL_SUB_NO>");
+                str.append("<PRES_NO>");
+                str.append(pgd.getString("PRES_NO"));//处方号
+                str.append("</PRES_NO>");
+                str.append("<PRES_SUB_NO>");
+                str.append(pgd.getString("PRES_SUB_NO"));//处方子序号
+                str.append("</PRES_SUB_NO>");
+                str.append("<CHARGE_ITEM_CODE>");
+                str.append(pgd.getString("CHARGE_ITEM_CODE"));//收费项目代码
+                str.append("</CHARGE_ITEM_CODE>");
+                str.append("<CHARGE_ITEM_NAME>");
+                str.append(pgd.getString("CHARGE_ITEM_NAME"));//收费项目名称
+                str.append("</CHARGE_ITEM_NAME>");
+                str.append("<FEE_CATEG_CODE>");
+                str.append(pgd.getString("FEE_CATEG_CODE"));//费用类别代码
+                str.append("</FEE_CATEG_CODE>");
+                str.append("<FEE_CATEG_NAME>");
+                str.append(pgd.getString("FEE_CATEG_NAME"));//费用类别名称
+                str.append("</FEE_CATEG_NAME>");
+                str.append("<DRUG_CATALOG_TYPE>");
+                str.append(pgd.getString("DRUG_CATALOG_TYPE"));//药品目录类别
+                str.append("</DRUG_CATALOG_TYPE>");
+                str.append("<DRUG_AMOUNT>");
+                str.append(pgd.getString("DRUG_AMOUNT"));//药品数量
+                str.append("</DRUG_AMOUNT>");
+                str.append("<DRUG_UNIT>");
+                str.append(pgd.getString("DRUG_UNIT"));//药品单位
+                str.append("</DRUG_UNIT>");
+                str.append("<DRUG_UNIT_PRICE>");
+                str.append(pgd.getString("DRUG_UNIT_PRICE"));//药品单价
+                str.append("</DRUG_UNIT_PRICE>");
+                str.append("<SELF_PERCENT>");
+                str.append(pgd.getString("SELF_PERCENT"));//自理自费
+                str.append("</SELF_PERCENT>");
+                str.append("<TOTAL_MONEY>");
+                str.append(pgd.getString("TOTAL_MONEY"));//总金额
+                str.append("</TOTAL_MONEY>");
+                str.append("<VALUATION_FLAG>");
+                str.append(pgd.getString("VALUATION_FLAG"));//计价标志
+                str.append("</VALUATION_FLAG>");
+
+                str.append("</row></msg>");
+            }
+            if(!stringList.isEmpty()){
+                fhjg =this.getFHJG("1","",str.toString());
+            }else{
+                fhjg =this.getFHJG("0","",str.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return this.getFHJG("-1",e.getMessage(),"");
+        }
+        return fhjg;
+    }
+
+    /**
+     * 根据交易流水号获取患者的住院费用明细信息
+     * */
+    public String getInhospFeeDetail(String XML) {
+        String fhjg;
+        try {
+            Document document = DocumentHelper.parseText(XML);
+            Element root = document.getRootElement();
+            Element met = root.element("param");//解析XML
+            String dealNo = met.element("DEAL_NO").getText();//解析XML交易流水号
+            List<PageData> stringList;
+            StringBuilder str = new StringBuilder();
+            PageData pd = new PageData();
+            pd.put("dealNo",dealNo);
+
+            stringList = zyfyservice.getInhospFeeDetail(pd);
+            for (PageData pgd :stringList) {
+                str.append("<msg><row>");
+                str.append("<ORGAN_CODE>");
+                str.append(pgd.getString("ORGAN_CODE"));//组织机构代码
+                str.append("</ORGAN_CODE>");
+                str.append("<ORDER_NO>");
+                str.append(pgd.getString("ORDER_NO"));//医嘱号
+                str.append("</ORDER_NO>");
+                str.append("<DEAL_NO>");
+                str.append(pgd.getString("DEAL_NO"));//交易流水号
+                str.append("</DEAL_NO>");
+                str.append("<DEAL_SUB_NO>");
+                str.append(pgd.getString("DEAL_SUB_NO"));//交易流水子序号
+                str.append("</DEAL_SUB_NO>");
+                str.append("<CHARGE_ITEM_CODE>");
+                str.append(pgd.getString("CHARGE_ITEM_CODE"));//收费项目代码
+                str.append("</CHARGE_ITEM_CODE>");
+                str.append("<CHARGE_ITEM_NAME>");
+                str.append(pgd.getString("CHARGE_ITEM_NAME"));//收费项目名称
+                str.append("</CHARGE_ITEM_NAME>");
+                str.append("<FEE_CATEG_CODE>");
+                str.append(pgd.getString("FEE_CATEG_CODE"));//费用类别代码
+                str.append("</FEE_CATEG_CODE>");
+                str.append("<FEE_CATEG_NAME>");
+                str.append(pgd.getString("FEE_CATEG_NAME"));//费用类别名称
+                str.append("</FEE_CATEG_NAME>");
+                str.append("<DRUG_CATALOG_TYPE>");
+                str.append(pgd.getString("DRUG_CATALOG_TYPE"));//药品目录类别
+                str.append("</DRUG_CATALOG_TYPE>");
+                str.append("<DRUG_AMOUNT>");
+                str.append(pgd.getString("DRUG_AMOUNT"));//药品数量
+                str.append("</DRUG_AMOUNT>");
+                str.append("<DRUG_UNIT>");
+                str.append(pgd.getString("DRUG_UNIT"));//药品单位
+                str.append("</DRUG_UNIT>");
+                str.append("<DRUG_UNIT_PRICE>");
+                str.append(pgd.getString("DRUG_UNIT_PRICE"));//药品单价
+                str.append("</DRUG_UNIT_PRICE>");
+                str.append("<SELF_PERCENT>");
+                str.append(pgd.getString("SELF_PERCENT"));//自理自费
+                str.append("</SELF_PERCENT>");
+                str.append("<TOTAL_MONEY>");
+                str.append(pgd.getString("TOTAL_MONEY"));//总金额
+                str.append("</TOTAL_MONEY>");
+
+                str.append("</row></msg>");
+            }
+            if(!stringList.isEmpty()){
+                fhjg =this.getFHJG("1","",str.toString());
+            }else{
+                fhjg =this.getFHJG("0","",str.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return this.getFHJG("-1",e.getMessage(),"");
+        }
+        return fhjg;
+    }
+
+    /**
+     * 根据交易流水号获取患者门诊费用明细信息
+     * */
+    public String getOuthospBalance(String XML) {
+        String fhjg;
+        try {
+            Document document = DocumentHelper.parseText(XML);
+            Element root = document.getRootElement();
+            Element met = root.element("param");//解析XML
+            String dealNo = met.element("DEAL_NO").getText();//解析XML交易流水号
+            List<PageData> stringList;
+            StringBuilder str = new StringBuilder();
+            PageData pd = new PageData();
+            pd.put("dealNo",dealNo);
+
+            stringList = mzfyservice.getOuthospBalance(pd);
+            for (PageData pgd :stringList) {
+                str.append("<msg><row>");
+                str.append("<ORGAN_CODE>");
+                str.append(pgd.getString("ORGAN_CODE"));//组织机构代码
+                str.append("</ORGAN_CODE>");
+                str.append("<DEAL_NO>");
+                str.append(pgd.getString("DEAL_NO"));//交易流水号
+                str.append("</DEAL_NO>");
+                str.append("<BALANCE_NO>");
+                str.append(pgd.getString("BALANCE_NO"));//结算流水号
+                str.append("</BALANCE_NO>");
+                str.append("<FEE_CATEG_CODE>");
+                str.append(pgd.getString("FEE_CATEG_CODE"));//费用类别代码
+                str.append("</FEE_CATEG_CODE>");
+                str.append("<FEE_CATEG_NAME>");
+                str.append(pgd.getString("FEE_CATEG_NAME"));//费用类别名称
+                str.append("</FEE_CATEG_NAME>");
+                str.append("<TOTAL_MONEY>");
+                str.append(pgd.getString("TOTAL_MONEY"));//总金额
+                str.append("</TOTAL_MONEY>");
+
+                str.append("</row></msg>");
+            }
+            if(!stringList.isEmpty()){
+                fhjg =this.getFHJG("1","",str.toString());
+            }else{
+                fhjg =this.getFHJG("0","",str.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return this.getFHJG("-1",e.getMessage(),"");
+        }
+        return fhjg;
+    }
+
+    /**
+     * 根据交易流水号获取患者的住院费用明细信息
+     * */
+    public String getInhospBalance(String XML) {
+        String fhjg;
+        try {
+            Document document = DocumentHelper.parseText(XML);
+            Element root = document.getRootElement();
+            Element met = root.element("param");//解析XML
+            String dealNo = met.element("DEAL_NO").getText();//解析XML交易流水号
+            List<PageData> stringList;
+            StringBuilder str = new StringBuilder();
+            PageData pd = new PageData();
+            pd.put("dealNo",dealNo);
+
+            stringList = zyfyservice.getInhospBalance(pd);
+            for (PageData pgd :stringList) {
+                str.append("<msg><row>");
+                str.append("<ORGAN_CODE>");
+                str.append(pgd.getString("ORGAN_CODE"));//组织机构代码
+                str.append("</ORGAN_CODE>");
+                str.append("<DEAL_NO>");
+                str.append(pgd.getString("DEAL_NO"));//交易流水号
+                str.append("</DEAL_NO>");
+                str.append("<BALANCE_NO>");
+                str.append(pgd.getString("BALANCE_NO"));//结算流水号
+                str.append("</BALANCE_NO>");
+                str.append("<FEE_CATEG_CODE>");
+                str.append(pgd.getString("FEE_CATEG_CODE"));//费用类别代码
+                str.append("</FEE_CATEG_CODE>");
+                str.append("<FEE_CATEG_NAME>");
+                str.append(pgd.getString("FEE_CATEG_NAME"));//费用类别名称
+                str.append("</FEE_CATEG_NAME>");
+                str.append("<TOTAL_MONEY>");
+                str.append(pgd.getString("TOTAL_MONEY"));//总金额
+                str.append("</TOTAL_MONEY>");
+
+                str.append("</row></msg>");
+            }
+            if(!stringList.isEmpty()){
+                fhjg =this.getFHJG("1","",str.toString());
+            }else{
+                fhjg =this.getFHJG("0","",str.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return this.getFHJG("-1",e.getMessage(),"");
+        }
+        return fhjg;
+    }
+
+    /**
+     * 3.2.26	检验样本
+     * */
+    public String getTestSample(String XML) {
+        String fhjg;
+        try {
+            Document document = DocumentHelper.parseText(XML);
+            Element root = document.getRootElement();
+            Element met = root.element("param");//解析XML
+            String patIndexNo = met.element("PAT_INDEX_NO").getText();//解析XML患者索引号
+            String outhospSerialNo = met.element("OUTHOSP_SERIAL_NO").getText();//解析XML门诊流水号
+            String inhospSerialNo = met.element("INHOSP_SERIAL_NO").getText();//解析XML住院流水号
+            String outhospNo = met.element("OUTHOSP_NO").getText();//解析XML门诊号
+            String inhospNo = met.element("INHOSP_NO").getText();//解析XML住院号
+            String requisitionNo = met.element("REQUISITION_NO").getText();//解析XML申请单编号
+            String requisitionNoItem = met.element("REQUISITION_NO_ITEM").getText();//解析XML申请单分项目序号
+            List<PageData> stringList;
+            StringBuilder str = new StringBuilder();
+            PageData pd = new PageData();
+            pd.put("patIndexNo",patIndexNo);
+            pd.put("outhospSerialNo",outhospSerialNo);
+            pd.put("inhospSerialNo",inhospSerialNo);
+            pd.put("outhospNo",outhospNo);
+            pd.put("inhospNo",inhospNo);
+            pd.put("requisitionNo",requisitionNo);
+            pd.put("requisitionNoItem",requisitionNoItem);
+            stringList = jysqservice.getTestSample(pd);
+            for (PageData pgd :stringList) {
+                str.append("<msg><row>");
+                str.append("<ORGAN_CODE>");
+                str.append(pgd.getString("ORGAN_CODE"));//组织机构代码
+                str.append("</ORGAN_CODE>");
+                str.append("<PAT_INDEX_NO>");
+                str.append(pgd.getString("PAT_INDEX_NO"));//患者索引号
+                str.append("</PAT_INDEX_NO>");
+                str.append("<OUTHOSP_NO>");
+                str.append(pgd.getString("OUTHOSP_NO"));//门诊号
+                str.append("</OUTHOSP_NO>");
+                str.append("<OUTHOSP_SERIAL_NO>");
+                str.append(pgd.getString("OUTHOSP_SERIAL_NO"));//门诊流水号
+                str.append("</OUTHOSP_SERIAL_NO>");
+                str.append("<INHOSP_NO>");
+                str.append(pgd.getString("INHOSP_NO"));//住院号
+                str.append("</INHOSP_NO>");
+                str.append("<INHOSP_NUM>");
+                str.append(pgd.getString("INHOSP_NUM"));//住院次数
+                str.append("</INHOSP_NUM>");
+                str.append("<INHOSP_SERIAL_NO>");
+                str.append(pgd.getString("INHOSP_SERIAL_NO"));//住院流水号
+                str.append("</INHOSP_SERIAL_NO>");
+                str.append("<REQUISITION_NO>");
+                str.append(pgd.getString("REQUISITION_NO"));//申请单编号
+                str.append("</REQUISITION_NO>");
+                str.append("<REQUISITION_NO_ITEM>");
+                str.append(pgd.getString("REQUISITION_NO_ITEM"));//申请单分项目序号
+                str.append("</REQUISITION_NO_ITEM>");
+                str.append("<BARCODE_NO>");
+                str.append(pgd.getString("BARCODE_NO"));//条码号
+                str.append("</BARCODE_NO>");
+                str.append("<SAMPLING_DATE>");
+                str.append(pgd.getString("SAMPLING_DATE"));//采样时间
+                str.append("</SAMPLING_DATE>");
+                str.append("<SAMPLING_LOCATION>");
+                str.append(pgd.getString("SAMPLING_LOCATION"));//采样地点
+                str.append("</SAMPLING_LOCATION>");
+                str.append("<TAKE_REPORT_DATE>");
+                str.append(pgd.getString("TAKE_REPORT_DATE"));//取单时间
+                str.append("</TAKE_REPORT_DATE>");
+                str.append("<TAKE_REPORT_LOCATION>");
+                str.append(pgd.getString("TAKE_REPORT_LOCATION"));//取单地点
+                str.append("</TAKE_REPORT_LOCATION>");
+                str.append("<REQUISITION_PRINT_DATE>");
+                str.append(pgd.getString("REQUISITION_PRINT_DATE"));//申请单打印时间
+                str.append("</REQUISITION_PRINT_DATE>");
+                str.append("<NOTE>");
+                str.append(pgd.getString("NOTE"));//备注
+                str.append("</NOTE>");
+                str.append("<RELATION_TYPE>");
+                str.append(pgd.getString("RELATION_TYPE"));//关联类型
+                str.append("</RELATION_TYPE>");
+                str.append("</row></msg>");
+            }
+            if(!stringList.isEmpty()){
+                fhjg =this.getFHJG("1","",str.toString());
+            }else{
+                fhjg =this.getFHJG("0","",str.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return this.getFHJG("-1",e.getMessage(),"");
+        }
+        return fhjg;
+    }
+
+    /**
+     * 根据门诊流水号获取患者的门诊诊断信息
+     * */
+    @Qualifier("ZDXXServiceImpl")
+    @Autowired
+    private ZDXXService zdxxservice;
+    public String getOuthospDiag(String XML) {
+        String fhjg;
+        try {
+            Document document = DocumentHelper.parseText(XML);
+            Element root = document.getRootElement();
+            Element met = root.element("param");//解析XML
+            String outhospSerialNo = met.element("OUTHOSP_SERIAL_NO").getText();//解析XML门诊流水号
+            List<PageData> stringList;
+            StringBuilder str = new StringBuilder();
+            PageData pd = new PageData();
+            pd.put("outhospSerialNo",outhospSerialNo);
+            stringList = zdxxservice.getOuthospDiag(pd);
+            for (PageData pgd :stringList) {
+                str.append("<msg><row>");
+                str.append("<ORGAN_CODE>");
+                str.append(pgd.getString("ORGAN_CODE"));//组织机构代码
+                str.append("</ORGAN_CODE>");
+                str.append("<PAT_INDEX_NO>");
+                str.append(pgd.getString("BRID"));//患者索引号
+                str.append("</PAT_INDEX_NO>");
+                str.append("<OUTHOSP_NO>");
+                str.append(pgd.getString("OUTHOSP_NO"));//门诊号
+                str.append("</OUTHOSP_NO>");
+                str.append("<OUTHOSP_SERIAL_NO>");
+                str.append(pgd.getString("OUTHOSP_SERIAL_NO"));//门诊流水号
+                str.append("</OUTHOSP_SERIAL_NO>");
+                str.append("<DIAG_INDEX_NO>");
+                str.append(pgd.getString("DIAG_INDEX_NO"));//诊断索引号
+                str.append("</DIAG_INDEX_NO>");
+                str.append("<DIAG_DATE>");
+                str.append(pgd.getString("DIAG_DATE"));//诊断日期
+                str.append("</DIAG_DATE>");
+                str.append("<DIAG_NO>");
+                str.append(pgd.getString("DIAG_NO"));//诊断序号
+                str.append("</DIAG_NO>");
+                str.append("<DIAG_TYPE_CODE>");
+                str.append(pgd.getString("DIAG_TYPE_CODE"));//诊断类型代码
+                str.append("</DIAG_TYPE_CODE>");
+                str.append("<DIAG_TYPE_NAME>");
+                str.append(pgd.getString("DIAG_TYPE_NAME"));//诊断类型名称
+                str.append("</DIAG_TYPE_NAME>");
+                str.append("<DIAG_CODE>");
+                str.append(pgd.getString("DIAG_CODE"));//诊断代码
+                str.append("</DIAG_CODE>");
+                str.append("<DIAG_NAME>");
+                str.append(pgd.getString("DIAG_NAME"));//诊断名称
+                str.append("</DIAG_NAME>");
+                str.append("<DIAG_INTRODUCTION>");
+                str.append(pgd.getString("DIAG_INTRODUCTION"));//诊断说明
+                str.append("</DIAG_INTRODUCTION>");
+                str.append("</row></msg>");
+            }
+            if(!stringList.isEmpty()){
+                fhjg =this.getFHJG("1","",str.toString());
+            }else{
+                fhjg =this.getFHJG("0","",str.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return this.getFHJG("-1",e.getMessage(),"");
+        }
+        return fhjg;
+    }
+
+    /**
+     * 根据住院流水水号获取患者的住院诊断信息
+     * */
+    public String getInhospDiag(String XML) {
+        String fhjg;
+        try {
+            Document document = DocumentHelper.parseText(XML);
+            Element root = document.getRootElement();
+            Element met = root.element("param");//解析XML
+            String inhospSerialNo = met.element("INHOSP_SERIAL_NO").getText();//解析XML住院流水号
+            List<PageData> stringList;
+            StringBuilder str = new StringBuilder();
+            PageData pd = new PageData();
+            pd.put("inhospSerialNo",inhospSerialNo);
+            stringList = zdxxservice.getInhospDiag(pd);
+            for (PageData pgd :stringList) {
+                str.append("<msg><row>");
+                str.append("<ORGAN_CODE>");
+                str.append(pgd.getString("ORGAN_CODE"));//组织机构代码
+                str.append("</ORGAN_CODE>");
+                str.append("<PAT_INDEX_NO>");
+                str.append(pgd.getString("BRID"));//患者索引号
+                str.append("</PAT_INDEX_NO>");
+                str.append("<INHOSP_NO>");
+                str.append(pgd.getString("INHOSP_NO"));//住院号
+                str.append("</INHOSP_NO>");
+                str.append("<INHOSP_NUM>");
+                str.append(pgd.getString("INHOSP_NUM"));//住院次数
+                str.append("</INHOSP_NUM>");
+                str.append("<INHOSP_SERIAL_NO>");
+                str.append(pgd.getString("INHOSP_SERIAL_NO"));//住院流水号
+                str.append("</INHOSP_SERIAL_NO>");
+                str.append("<DIAG_INDEX_NO>");
+                str.append(pgd.getString("DIAG_INDEX_NO"));//诊断索引号
+                str.append("</DIAG_INDEX_NO>");
+                str.append("<DIAG_DATE>");
+                str.append(pgd.getString("DIAG_DATE"));//诊断日期
+                str.append("</DIAG_DATE>");
+                str.append("<DIAG_NO>");
+                str.append(pgd.getString("DIAG_NO"));//诊断序号
+                str.append("</DIAG_NO>");
+                str.append("<DIAG_TYPE_CODE>");
+                str.append(pgd.getString("DIAG_TYPE_CODE"));//诊断类型代码
+                str.append("</DIAG_TYPE_CODE>");
+                str.append("<DIAG_TYPE_NAME>");
+                str.append(pgd.getString("DIAG_TYPE_NAME"));//诊断类型名称
+                str.append("</DIAG_TYPE_NAME>");
+                str.append("<DIAG_CODE>");
+                str.append(pgd.getString("DIAG_CODE"));//诊断代码
+                str.append("</DIAG_CODE>");
+                str.append("<DIAG_NAME>");
+                str.append(pgd.getString("DIAG_NAME"));//诊断名称
+                str.append("</DIAG_NAME>");
+                str.append("<DIAG_INTRODUCTION>");
+                str.append(pgd.getString("DIAG_INTRODUCTION"));//诊断说明
+                str.append("</DIAG_INTRODUCTION>");
                 str.append("</row></msg>");
             }
             if(!stringList.isEmpty()){

@@ -9,9 +9,11 @@ import java.util.List;
 
 /**
  * 3.2.21	检验申请单
+ * 3.2.26	检验样本
  * */
 @DS("jyzyylis")
 @Service
 public interface JYSQService extends IBaseService {
     List<PageData> getTestRequisition(PageData pd);
+    List<PageData> getTestSample(PageData pd);
 }

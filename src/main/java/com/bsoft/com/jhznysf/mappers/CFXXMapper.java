@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface CFXXMapper extends SqlMapper {
 
-    @Select(" <script> SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM') AS ORGAN_CODE, MC.BRID,MB.MZHM,MC.JZXH, \n" +
+    @Select(" <script> SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE, MC.BRID,MB.MZHM,MC.JZXH, \n" +
             "MC.CFHM,MCX.YPZH AS PRES_GROUP_NO,MC.KSDM,GK.KSMC AS PRES_OPEN_DEPT_NAME,MC.YSDM,GYG.YGXM AS PRES_OPEN_DR_NAME, \n" +
             "to_char(MC.KFRQ,'YYYY-MM-DD hh:mm:ss') AS PRES_ORDER_DATE,'' AS PRES_VALID_DAY,MC.CFLX,decode(MC.CFLX,'1','西药','2','中成药','3','中草药')AS PRES_CATEG_NAME, \n" +
             "'1' AS CHARGE_FLAG,'' AS NOTE \n" +
@@ -26,7 +26,7 @@ public interface CFXXMapper extends SqlMapper {
             "AND MC.JZXH = #{outhospSerialNo} </script>")
     List<PageData> getOrderInfo(PageData pd) ;
 
-    @Select(" <script> SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM') AS ORGAN_CODE,MC.CFHM,MCX.SBXH,MCX.YPZH AS PRES_GROUP_NO, \n" +
+    @Select(" <script> SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE,MC.CFHM,MCX.SBXH,MCX.YPZH AS PRES_GROUP_NO, \n" +
             "MCX.YPXH,YY.YPMC AS DRUG_NAME,MCX.YFGG,MCX.GYTJ AS DOSE_WAY_CODE,ZYF.XMMC AS DOSE_WAY_NAME, \n" +
             "MCX.YCJL AS DRUG_USE_ONE_DOSAGE,YY.JLDW AS DRUG_USE_ONE_DOSAGE_UNIT, \n" +
             "MCX.YPYF AS DRUG_USE_FREQUENCY_CODE,GS.CHINESENAME AS DRUG_USE_FREQUENCY_NAME, \n" +

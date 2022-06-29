@@ -50,4 +50,14 @@ public class MZFYServiceImpl implements MZFYService {
     public List<PageData> getOuthospFee(PageData pd) {
         return mzfymapper.getOuthospFee(pd);
     }
+
+    @Override
+    public List<PageData> getOuthospFeeDetail(PageData pd) {
+        return mzfymapper.getOuthospFeeDetail(pd);
+    }
+
+    @Override
+    public List<PageData> getOuthospBalance(PageData pd) {
+        return mzfymapper.getOuthospBalance(pd);
+    }
 }

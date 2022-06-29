@@ -1,9 +1,9 @@
 package com.bsoft.com.jhznysf.service.impl;
 
-import com.bsoft.com.jhznysf.mappers.MZFYMapper;
-import com.bsoft.com.jhznysf.mappers.ZYFYMapper;
-import com.bsoft.com.jhznysf.service.MZFYService;
-import com.bsoft.com.jhznysf.service.ZYFYService;
+import com.bsoft.com.jhznysf.mappers.BRDAMapper;
+import com.bsoft.com.jhznysf.mappers.SSJLMapper;
+import com.bsoft.com.jhznysf.service.BRDAService;
+import com.bsoft.com.jhznysf.service.SSJLService;
 import com.bsoft.com.jhznysf.utils.PageData;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ZYFYServiceImpl implements ZYFYService {
+public class SSJLServiceImpl implements SSJLService {
     @Autowired
-    private ZYFYMapper zyfymapper;
+    private SSJLMapper ssjlmapper;
 
     @Override
     public JSONObject getTablePageData(Integer page, Integer limit, PageData pd) {
@@ -47,17 +47,7 @@ public class ZYFYServiceImpl implements ZYFYService {
     }
 
     @Override
-    public List<PageData> getInhospFee(PageData pd) {
-        return zyfymapper.getInhospFee(pd);
-    }
-
-    @Override
-    public List<PageData> getInhospFeeDetail(PageData pd) {
-        return zyfymapper.getInhospFeeDetail(pd);
-    }
-
-    @Override
-    public List<PageData> getInhospBalance(PageData pd) {
-        return zyfymapper.getInhospBalance(pd);
+    public List<PageData> getSurgeryRecord(PageData pd) {
+        return ssjlmapper.getSurgeryRecord(pd);
     }
 }

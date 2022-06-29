@@ -9,10 +9,12 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 //3.2.17	住院费用
+//3.2.23	住院费用明细
+//3.2.25	住院费用结算
 @Mapper
 public interface ZYFYMapper extends SqlMapper {
 
-    @Select(" <script> SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM') AS ORGAN_CODE, \n" +
+    @Select(" <script> SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE, \n" +
             "zb.BRID AS PAT_INDEX_NO, \n" +
             "zb.zyhm as INHOSP_NO,\n" +
             "YZJ.ZYCS as INHOSP_NUM, \n" +
@@ -38,4 +40,43 @@ public interface ZYFYMapper extends SqlMapper {
             "WHERE zzj.zyh = #{inhospSerialNo} </script>")
     List<PageData> getInhospFee(PageData pd) ;
 
+    @Select(" <script> SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE,\n" +
+            "FYMX.YZXH as ORDER_NO,\n" +
+            "ZYJS.FPHM as DEAL_NO,\n" +
+            "FYMX.JLXH as DEAL_SUB_NO,\n" +
+            "FYMX.FYXH as CHARGE_ITEM_CODE,\n" +
+            "FYMX.FYMC as CHARGE_ITEM_NAME,\n" +
+            "FYMX.XMLX as FEE_CATEG_CODE,\n" +
+            "DECODE(FYMX.XMLX,'1','病区系统记帐','2','药房系统记帐','3','医技系统记帐','4','住院系统记帐','5','手术麻醉记帐','9','自动累加费用','6','pacs系统记账','')AS FEE_CATEG_NAME,\n" +
+            "'' as DRUG_CATALOG_TYPE,\n" +
+            "FYMX.FYSL as DRUG_AMOUNT,\n" +
+            "'' as DRUG_UNIT,\n" +
+            "FYMX.FYDJ as DRUG_UNIT_PRICE,\n" +
+            "FYMX.ZFJE as SELF_PERCENT,\n" +
+            "FYMX.ZJJE as TOTAL_MONEY\n" +
+            "FROM \n" +
+            "V_ZY_FYMX FYMX,  ZY_BRRY RY, zy_zyjs ZYJS\n" +
+            "WHERE \n" +
+            "FYMX.ZYH = RY.ZYH\n" +
+            "and ZYJS.ZYH=FYMX.ZYH\n" +
+            "and ZYJS.FPHM = #{dealNo} </script>")
+    List<PageData> getInhospFeeDetail(PageData pd) ;
+
+    @Select(" <script> SELECT a.ORGAN_CODE,a.DEAL_NO,a.BALANCE_NO,a.FEE_CATEG_CODE,a.FEE_CATEG_NAME,sum(a.TOTAL_MONEY) FROM (\n" +
+            "SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE,\n" +
+            "ZYJS.FPHM as DEAL_NO,\n" +
+            "ZYJS.Jslsh as BALANCE_NO,\n" +
+            "FYMX.XMLX as FEE_CATEG_CODE,\n" +
+            "DECODE(FYMX.XMLX,'1','病区系统记帐','2','药房系统记帐','3','医技系统记帐','4','住院系统记帐','5','手术麻醉记帐','9','自动累加费用','6','pacs系统记账','')AS FEE_CATEG_NAME,\n" +
+            "FYMX.ZJJE as TOTAL_MONEY\n" +
+            "FROM \n" +
+            "V_ZY_FYMX FYMX,  ZY_BRRY RY, zy_zyjs ZYJS\n" +
+            "WHERE \n" +
+            "FYMX.ZYH = RY.ZYH\n" +
+            "and ZYJS.ZYH=FYMX.ZYH\n" +
+            "and ZYJS.Jslsh is not null\n" +
+            ")a \n" +
+            "WHERE a.DEAL_NO = #{dealNo} " +
+            "group by a.ORGAN_CODE,a.DEAL_NO,a.BALANCE_NO,a.FEE_CATEG_CODE,a.FEE_CATEG_NAME </script>")
+    List<PageData> getInhospBalance(PageData pd) ;
 }

@@ -9,10 +9,11 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 //3.2.21	检验申请单
+//3.2.26	检验样本
 @Mapper
 public interface JYSQMapper extends SqlMapper {
 
-    @Select(" <script>SELECT distinct '46640408-2' AS ORGAN_CODE, \n" +
+    @Select(" <script>SELECT distinct (SELECT GX.CSZ1 FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE, \n" +
             "lls.BRID AS PAT_INDEX_NO, \n" +
             "DECODE(lls.STAYHOSPITALMODE,1,lls.PATIENTID,'') AS OUTHOSP_NO, \n" +
             "DECODE(lls.STAYHOSPITALMODE,1,lls.jzxh,'') AS OUTHOSP_SERIAL_NO, \n" +
@@ -28,11 +29,39 @@ public interface JYSQMapper extends SqlMapper {
             "lls.bz as NOTE\n" +
             "FROM l_lis_sqd lls where 1=1 "+
             "<if  test= \"outhospNo!=null and outhospNo!=''\"> and lls.PATIENTID= #{outhospNo} </if>" +
-            "<if  test= \"outhospSerialNo!=null and outhospSerialNo!=''\"> AND ymj.jzxh= #{outhospSerialNo} </if> " +//门诊流水号
+            "<if  test= \"outhospSerialNo!=null and outhospSerialNo!=''\"> AND lls.jzxh= #{outhospSerialNo} </if> " +//门诊流水号
             "<if  test= \"inhospNo!=null and inhospNo!=''\"> and lls.PATIENTID = #{inhospNo} </if>" +
-            "<if  test= \"inhospSerialNo!=null and inhospSerialNo!=''\"> AND zb.zyh= #{inhospSerialNo} </if> " +//住院流水号
+            "<if  test= \"inhospSerialNo!=null and inhospSerialNo!=''\"> AND lls.jzxh= #{inhospSerialNo} </if> " +//住院流水号
             "<if  test= \"startDate!=null and startDate!=''\"> and lls.requesttime &gt;= to_date(#{startDate},'yyyy-MM-dd HH24:mi:ss') </if>" +
             "<if  test= \"endDate!=null and endDate!=''\"> and lls.requesttime &lt;= to_date(#{endDate},'yyyy-MM-dd HH24:mi:ss') </if></script>")
     List<PageData> getTestRequisition(PageData pd) ;
 
+    @Select(" <script>SELECT distinct '46640408-2' AS ORGAN_CODE, \n" +
+            "lls.BRID AS PAT_INDEX_NO, \n" +
+            "DECODE(lls.STAYHOSPITALMODE,1,lls.PATIENTID,'') AS OUTHOSP_NO,\n" +
+            "DECODE(lls.STAYHOSPITALMODE,1,lls.jzxh,'') AS OUTHOSP_SERIAL_NO,\n" +
+            "DECODE(lls.STAYHOSPITALMODE,2,lls.PATIENTID,'') AS INHOSP_NO,\n" +
+            "'' as INHOSP_NUM,\n" +
+            "DECODE(lls.STAYHOSPITALMODE,2,lls.jzxh,'') as INHOSP_SERIAL_NO,\n" +
+            "lls.doctrequestno as REQUISITION_NO,\n" +
+            "lls.ylxh as REQUISITION_NO_ITEM, \n" +
+            "lj.doctadviseno as BARCODE_NO,\n" +
+            "lj.executetime as SAMPLING_DATE,\n" +
+            "'' as SAMPLING_LOCATION,\n" +
+            "lj.BGSJ as TAKE_REPORT_DATE,\n" +
+            "'' as TAKE_REPORT_LOCATION,\n" +
+            "lj.PRINTTIME as REQUISITION_PRINT_DATE,\n" +
+            "lj.notes as NOTE,\n" +
+            "'2-申请单编号' as RELATION_TYPE\n" +
+            "FROM l_lis_sqd lls, L_JYTMXX lj\n" +
+            "where lj.doctrequestno=lls.doctrequestno "+
+            "<if  test= \"patIndexNo!=null and patIndexNo!=''\"> and lls.BRID= #{patIndexNo} </if>" +//患者索引号
+            "<if  test= \"outhospNo!=null and outhospNo!=''\"> and lls.PATIENTID= #{outhospNo} </if>" +//门诊号
+            "<if  test= \"outhospSerialNo!=null and outhospSerialNo!=''\"> AND lls.jzxh= #{outhospSerialNo} </if> " +//门诊流水号
+            "<if  test= \"inhospNo!=null and inhospNo!=''\"> and lls.PATIENTID = #{inhospNo} </if>" +//住院号
+            "<if  test= \"inhospSerialNo!=null and inhospSerialNo!=''\"> AND lls.jzxh= #{inhospSerialNo} </if> " +//住院流水号
+            "<if  test= \"requisitionNo!=null and requisitionNo!=''\"> and lls.doctrequestno = #{requisitionNo} </if>" +//申请单编号
+            "<if  test= \"requisitionNoItem!=null and requisitionNoItem!=''\"> and lls.ylxh = #{requisitionNoItem} </if>" +//申请单分项目序号
+            " </script>")
+    List<PageData> getTestSample(PageData pd) ;
 }

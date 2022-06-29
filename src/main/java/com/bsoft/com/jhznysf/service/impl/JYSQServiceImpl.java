@@ -51,4 +51,9 @@ public class JYSQServiceImpl implements JYSQService {
         return jysqmapper.getTestRequisition(pd);
     }
 
+    @Override
+    public List<PageData> getTestSample(PageData pd) {
+        return jysqmapper.getTestSample(pd);
+    }
+
 }

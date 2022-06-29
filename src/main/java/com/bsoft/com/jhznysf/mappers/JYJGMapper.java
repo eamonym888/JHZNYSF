@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 public interface JYJGMapper {
     //3.2.13	检验结果
-    @Select(" <script> SELECT '46640408-2' AS ORGAN_CODE, \n" +
+    @Select(" <script> SELECT (SELECT GX.CSZ1 FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE, \n" +
             "lt.sampleno as REPORT_NO, \n" +
             "lt.pxxh as REPORT_RESULT_NO,\n" +
             "lt.testid as TEST_ITEM_CODE, \n" +
@@ -28,7 +28,7 @@ public interface JYJGMapper {
     List<PageData> getTestReport(PageData pd) ;
 
     //3.2.14	微生物检验结果
-    @Select(" <script> SELECT '46640408-2' AS ORGAN_CODE, \n" +
+    @Select(" <script> SELECT (SELECT GX.CSZ1 FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE, \n" +
             "lt.sampleno as REPORT_NO, \n" +
             "lt.pxxh as REPORT_RESULT_NO,\n" +
             "--lt.testid as TEST_ITEM_CODE, \n" +

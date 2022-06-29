@@ -13,6 +13,6 @@ public interface YPMLMapper extends SqlMapper {
 
     @Select("SELECT GX.MRZ AS ORGAN_CODE,YY.YPXH,YY.YPDM,YY.YPMC,YY.PYDM \n" +
             "FROM YK_YPML YY,GY_XTCS GX \n" +
-            "WHERE GX.CSMC='YLJGDM' ")
+            "WHERE GX.CSMC='YLJGDM_NEW' ")
     List<PageData> getDrugDict(PageData pd) ;
 }

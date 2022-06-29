@@ -13,6 +13,6 @@ public interface JBBMMapper extends SqlMapper {
 
     @Select(" SELECT GX.MRZ AS ORGAN_CODE,GJ.JBXH,ICD10 AS DIAG_CODE,GJ.JBMC,GJ.PYDM\n" +
             "FROM GY_JBBM GJ,GY_XTCS GX \n" +
-            "WHERE GX.CSMC='YLJGDM' AND GJ.ZFPB=0 ")
+            "WHERE GX.CSMC='YLJGDM_NEW' AND GJ.ZFPB=0 ")
     List<PageData> getDiagDict(PageData pd) ;
 }

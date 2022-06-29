@@ -1,9 +1,9 @@
 package com.bsoft.com.jhznysf.service.impl;
 
-import com.bsoft.com.jhznysf.mappers.MZFYMapper;
-import com.bsoft.com.jhznysf.mappers.ZYFYMapper;
-import com.bsoft.com.jhznysf.service.MZFYService;
-import com.bsoft.com.jhznysf.service.ZYFYService;
+import com.bsoft.com.jhznysf.mappers.BRDAMapper;
+import com.bsoft.com.jhznysf.mappers.ZDXXMapper;
+import com.bsoft.com.jhznysf.service.BRDAService;
+import com.bsoft.com.jhznysf.service.ZDXXService;
 import com.bsoft.com.jhznysf.utils.PageData;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ZYFYServiceImpl implements ZYFYService {
+public class ZDXXServiceImpl implements ZDXXService {
     @Autowired
-    private ZYFYMapper zyfymapper;
+    private ZDXXMapper zdxxmapper;
 
     @Override
     public JSONObject getTablePageData(Integer page, Integer limit, PageData pd) {
@@ -47,17 +47,12 @@ public class ZYFYServiceImpl implements ZYFYService {
     }
 
     @Override
-    public List<PageData> getInhospFee(PageData pd) {
-        return zyfymapper.getInhospFee(pd);
+    public List<PageData> getOuthospDiag(PageData pd) {
+        return zdxxmapper.getOuthospDiag(pd);
     }
 
     @Override
-    public List<PageData> getInhospFeeDetail(PageData pd) {
-        return zyfymapper.getInhospFeeDetail(pd);
-    }
-
-    @Override
-    public List<PageData> getInhospBalance(PageData pd) {
-        return zyfymapper.getInhospBalance(pd);
+    public List<PageData> getInhospDiag(PageData pd) {
+        return zdxxmapper.getInhospDiag(pd);
     }
 }

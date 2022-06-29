@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 public interface BRDAMapper extends SqlMapper {
 
-    @Select(" <script> SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM') AS ORGAN_CODE,MB.BRID,MB.MZHM,DECODE(MB.BRXZ,1000,'0','1') AS VISIT_CARD_TYPE,MB.BRXM,MB.SFZH,DECODE(MB.ZXBZ,0,'1','0') AS ZXBZ,to_char(MB.JDSJ,'YYYY-MM-DD hh:mm:ss') AS JDSJ \n" +
+    @Select(" <script> SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE,MB.BRID,MB.MZHM,DECODE(MB.BRXZ,1000,'0','1') AS VISIT_CARD_TYPE,MB.BRXM,MB.SFZH,DECODE(MB.ZXBZ,0,'1','0') AS ZXBZ,to_char(MB.JDSJ,'YYYY-MM-DD hh:mm:ss') AS JDSJ \n" +
             "FROM MS_BRDA MB \n" +
             "LEFT JOIN MS_GHMX MG ON MG.BRID=MB.BRID \n" +
             "WHERE MB.BRXZ IN (1000,5000) \n"+
@@ -23,7 +23,7 @@ public interface BRDAMapper extends SqlMapper {
             "<if  test= \"endDate!=null and endDate!=''\"> and MB.JDSJ &lt;= to_date(#{endDate},'yyyy-MM-dd HH24:mi:ss') </if></script>")
     List<PageData> getCardNoInfo(PageData pd) ;
 
-    @Select(" <script> SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM') AS ORGAN_CODE,MB.BRID,MB.MZHM,ZB.ZYHM,MB.BRXM,MB.SFZH,MB.CSNY,MB.BRXB,decode(MB.BRXB,1,'男','女') AS SEX_NAME, \n" +
+    @Select(" <script> SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE,MB.BRID,MB.MZHM,ZB.ZYHM,MB.BRXM,MB.SFZH,MB.CSNY,MB.BRXB,decode(MB.BRXB,1,'男','女') AS SEX_NAME, \n" +
             "MB.MZDM,GD1.DMMC AS ETHNIC_NAME,MB.JTDH,MB.LXRM,GD2.DMMC AS CONTACT_RELATION,MB.LXDH \n" +
             "FROM MS_BRDA MB\n" +
             "LEFT JOIN ZY_BRRY ZB ON ZB.BRID=MB.BRID\n" +

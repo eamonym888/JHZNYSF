@@ -13,7 +13,7 @@ import java.util.List;
 public interface ZYJLMapper extends SqlMapper {
 
     @Select(" <script> SELECT A.* from (\n" +
-            "SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM') AS ORGAN_CODE,ZB.BRID,ZB.MZHM,ZB.BRXM,ZB.SFZH,MB.BRXB,decode(MB.BRXB,1,'男','女') AS SEX_NAME,MB.CSNY,ZB.LXDH,ZB.ZYHM,YZJ.ZYCS,ZB.ZYH, \n" +
+            "SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE,ZB.BRID,ZB.MZHM,ZB.BRXM,ZB.SFZH,MB.BRXB,decode(MB.BRXB,1,'男','女') AS SEX_NAME,MB.CSNY,ZB.LXDH,ZB.ZYHM,YZJ.ZYCS,ZB.ZYH, \n" +
             "ZB.BRKS,\n" +
             "(SELECT GK.KSMC FROM GY_KSDM GK where GK.KSDM=ZB.BRKS " +
             "<if  test= \"deptName!=null and deptName!=''\"> AND GK.KSMC= #{deptName} </if>" +//科室名称
@@ -88,7 +88,7 @@ public interface ZYJLMapper extends SqlMapper {
 
     @Select("<script> SELECT count(1)\n" +
             "FROM (\n" +
-            "SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM') AS ORGAN_CODE,ZB.BRID,ZB.MZHM,ZB.BRXM,ZB.SFZH,MB.BRXB,decode(MB.BRXB,1,'男','女') AS SEX_NAME,MB.CSNY,ZB.LXDH,ZB.ZYHM,YZJ.ZYCS,ZB.ZYH, \n" +
+            "SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE,ZB.BRID,ZB.MZHM,ZB.BRXM,ZB.SFZH,MB.BRXB,decode(MB.BRXB,1,'男','女') AS SEX_NAME,MB.CSNY,ZB.LXDH,ZB.ZYHM,YZJ.ZYCS,ZB.ZYH, \n" +
             "ZB.BRKS,\n" +
             "(SELECT GK.KSMC FROM GY_KSDM GK where GK.KSDM=ZB.BRKS " +
             "<if  test= \"deptName!=null and deptName!=''\"> AND GK.KSMC= #{deptName} </if>" +//科室名称

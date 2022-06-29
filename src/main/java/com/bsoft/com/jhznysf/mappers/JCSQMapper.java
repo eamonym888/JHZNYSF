@@ -12,11 +12,11 @@ import java.util.List;
 @Mapper
 public interface JCSQMapper extends SqlMapper {
 
-    @Select(" <script>SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM') AS ORGAN_CODE, \n" +
+    @Select(" <script>SELECT (SELECT GX.MRZ FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE, \n" +
             "ejs.BRID AS PAT_INDEX_NO, \n" +
             "ymj.BRBH AS OUTHOSP_NO,\n" +
             "ymj.JZXH AS OUTHOSP_SERIAL_NO, \n" +
-            "zb.zyhm as INHOSP_NO,\n" +
+            "(SELECT zb.zyhm FROM ZY_BRRY ZB where ZB.ZYH=yzj.JZHM) as INHOSP_NO,\n" +
             "yzj.zycs as INHOSP_NUM, \n" +
             "yzj.JZHM as INHOSP_SERIAL_NO， \n" +
             "ejs.sqdh as REQUISITION_NO,\n" +
@@ -25,7 +25,7 @@ public interface JCSQMapper extends SqlMapper {
             "ejs.jcxm as EXAM_APPLY_ITEM_NAME, \n" +
             "ejs.jclx as EXAM_TYPE_CODE, \n" +
             "'' as EXAM_TYPE_NAME,\n" +
-            "(SELECT ejb.bgrq FROM emr_jcbg ejb where ejb.sqdh=ejs.sqdh) as FINISH_DATE, \n" +
+            "(SELECT ejb.bgrq FROM emr_jcbg ejb where ejb.sqdh=ejs.sqdh and rownum=1) as FINISH_DATE, \n" +
             "ejc.jcbw as OPER_PART_CODE, \n" +
             "(SELECT ed.dmmc FROM  emr_dmzd ed where ed.dmlb='1' and ejc.jcbw=to_char(ed.dmsb)) as OPER_PART_NAME,  \n" +
             "ejs.jczt as REQUISITION_STATUS, \n" +

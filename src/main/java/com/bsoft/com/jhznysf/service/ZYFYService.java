@@ -8,8 +8,12 @@ import java.util.List;
 
 /**
  * 3.2.17	住院费用
+ * 3.2.23	住院费用明细
+ * 3.2.25	住院费用结算
  * */
 @Service
 public interface ZYFYService extends IBaseService {
     List<PageData> getInhospFee(PageData pd);
+    List<PageData> getInhospFeeDetail(PageData pd);
+    List<PageData> getInhospBalance(PageData pd);
 }
