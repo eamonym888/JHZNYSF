@@ -14,17 +14,14 @@ public interface JYBGMapper {
 
     @Select(" <script> SELECT distinct (SELECT GX.CSZ1 FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE,LP.BRID AS PAT_INDEX_NO, \n" +
             "DECODE(LP.STAYHOSPITALMODE,1,LP.PATIENTID,'') AS OUTHOSP_NO, \n" +
-            "(SELECT listagg(ymj.jzxh, ',') within group(order by ymj.jzxh) FROM ys_mz_jzls@bshis ymj,ms_ghmx@bshis mg,ms_brda@bshis mb \n" +
-            "where lp.patientid=mb.mzhm and mg.brid=mb.brid and ymj.ghxh=mg.sbxh " +
-            "<if  test= \"outhospSerialNo!=null and outhospSerialNo!=''\"> AND ymj.jzxh= #{outhospSerialNo} </if> " +//门诊流水号
-            " ) AS OUTHOSP_SERIAL_NO, \n" +
+            "(SELECT yj.jzxh FROM ms_yj01@bshis yj,L_JYTMXX tm where yj.fphm=tm.fphm and tm.doctadviseno=LP.doctadviseno " +
+            "<if  test= \"outhospSerialNo!=null and outhospSerialNo!=''\"> AND yj.jzxh= #{outhospSerialNo} </if> " +//门诊流水号
+            " and rownum=1) AS OUTHOSP_SERIAL_NO, \n" +
             "DECODE(LP.STAYHOSPITALMODE,2,LP.PATIENTID,'') AS INHOSP_NO, \n" +
-            "(SELECT listagg(yzj.zycs, ',') within group(order by yzj.zycs) FROM ys_zy_jzjl@bshis yzj,zy_brry@bshis zb \n" +
-            "where lp.patientid=zb.zyhm and yzj.jzhm=zb.zyh) as INHOSP_NUM, \n" +
-            "(SELECT listagg(zb.zyh, ',') within group(order by zb.zyh) FROM zy_brry@bshis zb \n" +
-            "where lp.patientid=zb.zyhm " +
+            "(SELECT yzj.zycs FROM ys_zy_jzjl@bshis yzj,zy_brry@bshis zb where lp.patientid=zb.zyhm and yzj.jzhm=zb.zyh) as INHOSP_NUM, \n" +
+            "(SELECT zb.zyh FROM zy_brry@bshis zb where lp.patientid=zb.zyhm " +
             "<if  test= \"inhospSerialNo!=null and inhospSerialNo!=''\"> AND zb.zyh= #{inhospSerialNo} </if> " +//住院流水号
-            ") as INHOSP_SERIAL_NO, \n" +
+            " and rownum=1) as INHOSP_SERIAL_NO, \n" +
             "(SELECT LJ.DOCTREQUESTNO FROM L_JYTMXX LJ where LP.DOCTADVISENO = LJ.DOCTADVISENO) AS REQUISITION_NO, \n" +
             "(SELECT LISTAGG(LT.TESTID, ',') WITHIN GROUP(ORDER BY LT.TESTID)  FROM L_TESTRESULT LT WHERE LT.SAMPLENO=LP.SAMPLENO) AS REQUISITION_NO_ITEM, \n" +
             "LP.SAMPLENO AS REPORT_NO, \n" +

@@ -21,7 +21,7 @@ public interface JYSQMapper extends SqlMapper {
             "'' as INHOSP_NUM, \n" +
             "DECODE(lls.STAYHOSPITALMODE,2,lls.jzxh,'') as INHOSP_SERIAL_NO, \n" +
             "lls.doctrequestno as REQUISITION_NO,\n" +
-            "lls.ylxh as REQUISITION_NO_ITEM, \n" +
+            "substr(lls.ylxh,1,length(lls.ylxh) -1 ) as REQUISITION_NO_ITEM, \n" +
             "lls.requesttime as APPLY_DATE,\n" +
             "lls.examinaimcode as EXAM_APPLY_ITEM_CODE, \n" +
             "lls.examinaim as EXAM_APPLY_ITEM_NAME, \n" +
@@ -36,7 +36,7 @@ public interface JYSQMapper extends SqlMapper {
             "<if  test= \"endDate!=null and endDate!=''\"> and lls.requesttime &lt;= to_date(#{endDate},'yyyy-MM-dd HH24:mi:ss') </if></script>")
     List<PageData> getTestRequisition(PageData pd) ;
 
-    @Select(" <script>SELECT distinct '46640408-2' AS ORGAN_CODE, \n" +
+    @Select(" <script>SELECT distinct (SELECT GX.CSZ1 FROM GY_XTCS GX where GX.CSMC='YLJGDM_NEW') AS ORGAN_CODE, \n" +
             "lls.BRID AS PAT_INDEX_NO, \n" +
             "DECODE(lls.STAYHOSPITALMODE,1,lls.PATIENTID,'') AS OUTHOSP_NO,\n" +
             "DECODE(lls.STAYHOSPITALMODE,1,lls.jzxh,'') AS OUTHOSP_SERIAL_NO,\n" +
