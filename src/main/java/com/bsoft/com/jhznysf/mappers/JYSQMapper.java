@@ -41,11 +41,11 @@ public interface JYSQMapper extends SqlMapper {
             "DECODE(lls.STAYHOSPITALMODE,1,lls.PATIENTID,'') AS OUTHOSP_NO,\n" +
             "DECODE(lls.STAYHOSPITALMODE,1,lls.jzxh,'') AS OUTHOSP_SERIAL_NO,\n" +
             "DECODE(lls.STAYHOSPITALMODE,2,lls.PATIENTID,'') AS INHOSP_NO,\n" +
-            "'' as INHOSP_NUM,\n" +
+            "(SELECT yzj.zycs FROM ys_zy_jzjl@bshis yzj where yzj.jzhm=lls.jzxh) as INHOSP_NUM,\n" +
             "DECODE(lls.STAYHOSPITALMODE,2,lls.jzxh,'') as INHOSP_SERIAL_NO,\n" +
             "lls.doctrequestno as REQUISITION_NO,\n" +
             "lls.ylxh as REQUISITION_NO_ITEM, \n" +
-            "lj.doctadviseno as BARCODE_NO,\n" +
+            "substr(lj.doctadviseno,4,10) as BARCODE_NO,\n" +
             "lj.executetime as SAMPLING_DATE,\n" +
             "'' as SAMPLING_LOCATION,\n" +
             "lj.BGSJ as TAKE_REPORT_DATE,\n" +
@@ -60,7 +60,8 @@ public interface JYSQMapper extends SqlMapper {
             "<if  test= \"outhospSerialNo!=null and outhospSerialNo!=''\"> AND lls.jzxh= #{outhospSerialNo} </if> " +//门诊流水号
             "<if  test= \"inhospNo!=null and inhospNo!=''\"> and lls.PATIENTID = #{inhospNo} </if>" +//住院号
             "<if  test= \"inhospSerialNo!=null and inhospSerialNo!=''\"> AND lls.jzxh= #{inhospSerialNo} </if> " +//住院流水号
-            "<if  test= \"requisitionNo!=null and requisitionNo!=''\"> and lls.doctrequestno = #{requisitionNo} </if>" +//申请单编号
+            "<if  test= \"requisitionNoList!=null and requisitionNoList.size() > 0\"> and lls.doctrequestno in " +
+            "<foreach collection='requisitionNoList' item='item' open='(' separator=',' close=')'>#{item}</foreach></if>" +//申请单编号
             "<if  test= \"requisitionNoItem!=null and requisitionNoItem!=''\"> and lls.ylxh = #{requisitionNoItem} </if>" +//申请单分项目序号
             " </script>")
     List<PageData> getTestSample(PageData pd) ;

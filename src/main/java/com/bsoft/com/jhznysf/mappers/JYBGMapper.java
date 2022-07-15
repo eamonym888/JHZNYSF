@@ -25,7 +25,7 @@ public interface JYBGMapper {
             "(SELECT LJ.DOCTREQUESTNO FROM L_JYTMXX LJ where LP.DOCTADVISENO = LJ.DOCTADVISENO) AS REQUISITION_NO, \n" +
             "(SELECT LISTAGG(LT.TESTID, ',') WITHIN GROUP(ORDER BY LT.TESTID)  FROM L_TESTRESULT LT WHERE LT.SAMPLENO=LP.SAMPLENO) AS REQUISITION_NO_ITEM, \n" +
             "LP.SAMPLENO AS REPORT_NO, \n" +
-            "LP.DOCTADVISENO AS BARCODE_NO, \n" +
+            "substr(LP.DOCTADVISENO,4,10) AS BARCODE_NO, \n" +
             "LP.EXAMINAIM AS REPORT_NAME, \n" +
             "LP.SAMPLETYPE AS SAMPLE_TYPE_CODE, \n" +
             "(SELECT LA.SAMPLEDESCRIBE FROM L_SAMPLETYPE LA where LA.SAMPLETYPE=LP.SAMPLETYPE) AS SAMPLE_TYPE_NAME,  \n" +
@@ -43,7 +43,8 @@ public interface JYBGMapper {
             "<if  test= \"patIndexNo!=null and patIndexNo!=''\"> and lp.brid = #{patIndexNo} </if>" +
             "<if  test= \"outhospNo!=null and outhospNo!=''\"> and lp.patientid = #{outhospNo} </if>" +
             "<if  test= \"inhospNo!=null and inhospNo!=''\"> and lp.patientid = #{inhospNo} </if>" +
-            "<if  test= \"barcodeNo!=null and barcodeNo!=''\"> and lp.doctadviseno = #{barcodeNo} </if>" +
+            "<if  test= \"barcodeNoList!=null and barcodeNoList.size() > 0\"> and substr(LP.DOCTADVISENO,4,10) in " +
+            "<foreach collection='barcodeNoList' item='item' open='(' separator=',' close=')'>#{item}</foreach></if>" +
             "<if  test= \"reportNo!=null and reportNo!=''\"> and lp.sampleno = #{reportNo} </if>" +
             "<if  test= \"startDate!=null and startDate!=''\"> and lp.BGSJ &gt;= to_date(#{startDate},'yyyy-MM-dd HH24:mi:ss') </if>" +
             "<if  test= \"endDate!=null and endDate!=''\"> and lp.BGSJ &lt;= to_date(#{endDate},'yyyy-MM-dd HH24:mi:ss') </if>" +

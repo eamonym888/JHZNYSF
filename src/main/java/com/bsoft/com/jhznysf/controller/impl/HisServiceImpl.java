@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.jws.WebService;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @WebService(
@@ -927,7 +928,10 @@ public class HisServiceImpl implements HisService {
             String outhospSerialNo = met.element("OUTHOSP_SERIAL_NO").getText();//解析XML门诊流水号
             String inhospNo = met.element("INHOSP_NO").getText();//解析XML住院号
             String inhospSerialNo = met.element("INHOSP_SERIAL_NO").getText();//解析XML住院流水号
-            String barcodeNo = met.element("BARCODE_NO").getText();//解析XML条码号(多个条码号用逗号分隔)
+            String s = met.element("BARCODE_NO").getText();
+            List<String> list = Arrays.asList(s.split(","));
+            List<String> barcodeNoList = new ArrayList<String>(list);//解析XML条码号(多个条码号用逗号分隔)
+            //String barcodeNoList = met.element("BARCODE_NO").getText();
             String reportNo = met.element("REPORT_NO").getText();//解析XML报告单号
             String startDate = met.element("START_DATE").getText();//解析XML开始日期时间
             String endDate = met.element("END_DATE").getText();//解析XML结束日期时间
@@ -939,7 +943,7 @@ public class HisServiceImpl implements HisService {
             pd.put("outhospSerialNo",outhospSerialNo);
             pd.put("inhospNo",inhospNo);
             pd.put("inhospSerialNo",inhospSerialNo);
-            pd.put("barcodeNo",barcodeNo);
+            pd.put("barcodeNoList",barcodeNoList);
             pd.put("reportNo",reportNo);
             pd.put("startDate",startDate);
             pd.put("endDate",endDate);
@@ -2395,7 +2399,10 @@ public class HisServiceImpl implements HisService {
             String inhospSerialNo = met.element("INHOSP_SERIAL_NO").getText();//解析XML住院流水号
             String outhospNo = met.element("OUTHOSP_NO").getText();//解析XML门诊号
             String inhospNo = met.element("INHOSP_NO").getText();//解析XML住院号
-            String requisitionNo = met.element("REQUISITION_NO").getText();//解析XML申请单编号
+            String s = met.element("REQUISITION_NO").getText();
+            List<String> list = Arrays.asList(s.split(","));
+            List<String> requisitionNoList = new ArrayList<String>(list);//解析XML条码号(多个条码号用逗号分隔)
+            //String requisitionNo = met.element("REQUISITION_NO").getText();//解析XML申请单编号
             String requisitionNoItem = met.element("REQUISITION_NO_ITEM").getText();//解析XML申请单分项目序号
             List<PageData> stringList;
             StringBuilder str = new StringBuilder();
@@ -2405,7 +2412,7 @@ public class HisServiceImpl implements HisService {
             pd.put("inhospSerialNo",inhospSerialNo);
             pd.put("outhospNo",outhospNo);
             pd.put("inhospNo",inhospNo);
-            pd.put("requisitionNo",requisitionNo);
+            pd.put("requisitionNoList",requisitionNoList);
             pd.put("requisitionNoItem",requisitionNoItem);
             stringList = jysqservice.getTestSample(pd);
             for (PageData pgd :stringList) {
